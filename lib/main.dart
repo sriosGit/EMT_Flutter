@@ -1,7 +1,11 @@
+import 'package:SoyVidaApp/screens/homeScreen.dart';
 import 'package:SoyVidaApp/screens/loginScreen.dart';
+import 'package:SoyVidaApp/services/navigationService.dart';
+import 'package:SoyVidaApp/utils/locatorUtil.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  setupLocator();
   runApp(MyApp());
 }
 
@@ -27,6 +31,15 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      navigatorKey: locator<NavigationService>().navigatorKey,
+      onGenerateRoute: (routeSettings) {
+        switch (routeSettings.name) {
+          case 'home':
+            return MaterialPageRoute(builder: (context) => HomeScreen());
+          default:
+            return MaterialPageRoute(builder: (context) => HomeScreen());
+        }
+      },
       home: Container(
         child: LoginScreen3(),
       ),

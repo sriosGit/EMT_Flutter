@@ -1,3 +1,4 @@
+import 'package:SoyVidaApp/services/homeService.dart';
 import 'package:flutter/material.dart';
 
 class AskHelpScreen extends StatefulWidget {
@@ -6,6 +7,75 @@ class AskHelpScreen extends StatefulWidget {
 }
 
 class _AskHelpScreenState extends State<AskHelpScreen> {
+  final requestHelpText = TextEditingController();
+  final userId = 1;
+  final token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBydWViYXNAZ21haWwuY29tIiwianRpIjoiYWI5MWE0YjQtMjEyZS00YTJmLWI3YWEtZWU4MWVhZTM4Mzk1IiwiZXhwIjoxNTk5MTc2MjY4LCJpc3MiOiJUZXN0LmNvbSIsImF1ZCI6IlRlc3QuY29tIn0.rfL0yNnl4R3Ou0Q36pplyocrvHAa6vaQyLnaRojk-Co";
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    requestHelpText.dispose();
+    super.dispose();
+  }
+
+  Future<void> _showOkDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Solicitud enviada'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Hola, recibimos tu solicitud!'),
+                SizedBox(height: 20),
+                Text(
+                    'Nuestros especialistas trabajarán los más rápido posible y se comunicarán contigo muy pronto.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Gracias',
+                style: TextStyle(fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  bool onSuccessSend(res) {
+    print(res);
+    requestHelpText.clear();
+    _showOkDialog();
+    return true;
+  }
+
+  bool onErrorSend(res) {
+    print(res);
+    print("Error SignUp ");
+    return true;
+  }
+
+  void _onSendRequestHelp() {
+    print("ON CLICK REQUEST HELP");
+    requestHelp(
+      userId,
+      token,
+      requestHelpText.text,
+      onSuccessSend,
+      onErrorSend,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +96,7 @@ class _AskHelpScreenState extends State<AskHelpScreen> {
             child: Padding(
               padding: EdgeInsets.all(12.0),
               child: TextField(
+                controller: requestHelpText,
                 maxLines: 12,
                 decoration: InputDecoration.collapsed(
                     hintText: "Por favor, dinos en que podemos ayudarte"),
@@ -51,7 +122,7 @@ class _AskHelpScreenState extends State<AskHelpScreen> {
               style: TextStyle(color: Colors.white, fontSize: 18),
             ),
           ),
-          onPressed: () => {},
+          onPressed: () => {_onSendRequestHelp()},
         ),
       ],
     ));

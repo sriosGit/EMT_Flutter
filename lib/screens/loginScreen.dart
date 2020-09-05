@@ -1,4 +1,7 @@
 import 'package:SoyVidaApp/screens/homeScreen.dart';
+import 'package:SoyVidaApp/services/authService.dart';
+import 'package:SoyVidaApp/services/navigationService.dart';
+import 'package:SoyVidaApp/utils/locatorUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -9,9 +12,93 @@ class LoginScreen3 extends StatefulWidget {
 
 class _LoginScreen3State extends State<LoginScreen3>
     with TickerProviderStateMixin {
+  // sign in controllers
+  final usernameController = TextEditingController();
+  final logInPasswordController = TextEditingController();
+
+  // sign up controllers
+  final firstName1Controller = TextEditingController();
+  final firstName2Controller = TextEditingController();
+  final lastName1Controller = TextEditingController();
+  final lastName2Controller = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final emailController = TextEditingController();
+  final signUpPasswordController = TextEditingController();
+  final rePasswordController = TextEditingController();
+  final dniController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    usernameController.dispose();
+    logInPasswordController.dispose();
+    firstName1Controller.dispose();
+    firstName2Controller.dispose();
+    lastName1Controller.dispose();
+    lastName2Controller.dispose();
+    phoneNumberController.dispose();
+    emailController.dispose();
+    signUpPasswordController.dispose();
+    rePasswordController.dispose();
+    dniController.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
+  }
+
+  // services triggers and callbacks
+
+  bool onSuccessLogin(res) {
+    print(res);
+    print("Succesful Login ");
+    locator<NavigationService>().navigateTo('home');
+    return true;
+  }
+
+  bool onErrorLogin(res) {
+    print(res);
+    print("Error Login ");
+    return true;
+  }
+
+  void _onClickLogin() {
+    print("ON CLICK LOGIN");
+    login(usernameController.text, logInPasswordController.text, onSuccessLogin,
+        onErrorLogin);
+  }
+
+  bool onSuccessSignup(res) {
+    print(res);
+    locator<NavigationService>().navigateTo('home');
+    return true;
+  }
+
+  bool onErrorSignup(res) {
+    print(res);
+    print("Error SignUp ");
+    return true;
+  }
+
+  void _onClickRegister() {
+    print("ON CLICK SIGNUP");
+    createUser(
+      firstName1Controller.text,
+      firstName2Controller.text,
+      lastName1Controller.text,
+      lastName2Controller.text,
+      int.parse(phoneNumberController.text),
+      emailController.text,
+      signUpPasswordController.text,
+      rePasswordController.text,
+      int.parse(dniController.text),
+      "Student",
+      onSuccessSignup,
+      onErrorSignup,
+    );
   }
 
   Widget homePage() {
@@ -321,6 +408,7 @@ class _LoginScreen3State extends State<LoginScreen3>
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    controller: usernameController,
                     textAlign: TextAlign.left,
                     decoration: InputDecoration(
                       border: InputBorder.none,
@@ -366,6 +454,7 @@ class _LoginScreen3State extends State<LoginScreen3>
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    controller: logInPasswordController,
                     obscureText: true,
                     textAlign: TextAlign.left,
                     decoration: InputDecoration(
@@ -410,7 +499,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     color: Colors.blue,
-                    onPressed: () => {_completeLogin()},
+                    onPressed: () => {_onClickLogin()},
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                         vertical: 20.0,
@@ -658,6 +747,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         children: <Widget>[
                           Expanded(
                             child: TextField(
+                              controller: emailController,
                               textAlign: TextAlign.left,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -706,6 +796,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         children: <Widget>[
                           Expanded(
                             child: TextField(
+                              controller: signUpPasswordController,
                               obscureText: true,
                               textAlign: TextAlign.left,
                               decoration: InputDecoration(
@@ -755,6 +846,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         children: <Widget>[
                           Expanded(
                             child: TextField(
+                              controller: rePasswordController,
                               obscureText: true,
                               textAlign: TextAlign.left,
                               decoration: InputDecoration(
@@ -804,6 +896,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         children: <Widget>[
                           Expanded(
                             child: TextField(
+                              controller: firstName1Controller,
                               textAlign: TextAlign.left,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -852,6 +945,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         children: <Widget>[
                           Expanded(
                             child: TextField(
+                              controller: firstName2Controller,
                               textAlign: TextAlign.left,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -900,10 +994,60 @@ class _LoginScreen3State extends State<LoginScreen3>
                         children: <Widget>[
                           Expanded(
                             child: TextField(
+                              controller: lastName1Controller,
                               textAlign: TextAlign.left,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Ingresa tu primer apellido',
+                                hintStyle: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: Text(
+                              "SEGUNDO APELLIDO",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, bottom: 30.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blue,
+                              width: 1,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            child: TextField(
+                              controller: lastName2Controller,
+                              textAlign: TextAlign.left,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Ingresa tu segundo apellido',
                                 hintStyle: TextStyle(color: Colors.grey),
                               ),
                             ),
@@ -948,6 +1092,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         children: <Widget>[
                           Expanded(
                             child: TextField(
+                              controller: phoneNumberController,
                               textAlign: TextAlign.left,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -996,6 +1141,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         children: <Widget>[
                           Expanded(
                             child: TextField(
+                              controller: dniController,
                               textAlign: TextAlign.left,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -1023,7 +1169,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
                               color: Colors.blue,
-                              onPressed: () => {},
+                              onPressed: _onClickRegister,
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 20.0,
@@ -1054,6 +1200,8 @@ class _LoginScreen3State extends State<LoginScreen3>
               );
             })));
   }
+
+  // page view navigation controllers
 
   gotoLogin() {
     _controller.animateToPage(

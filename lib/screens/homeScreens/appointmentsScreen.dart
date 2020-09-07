@@ -1,6 +1,7 @@
 import 'package:SoyVidaApp/components/appointmentCard.dart';
 import 'package:SoyVidaApp/models/Appointment.dart';
-import 'package:SoyVidaApp/screens/homeScreens/data.dart';
+import 'package:SoyVidaApp/services/homeService.dart';
+import 'package:SoyVidaApp/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentsScreen extends StatefulWidget {
@@ -9,12 +10,21 @@ class AppointmentsScreen extends StatefulWidget {
 }
 
 class _AppointmentsScreenState extends State<AppointmentsScreen> {
-  Future<List> _pendingAppointments = Future<List>.delayed(
-    Duration(seconds: 2),
-    () => ConstantData.pendingAppointments,
-  );
+  Future<dynamic> _pendingAppointments;
+
   DateTime startDate = DateTime(2020);
   DateTime endDate = DateTime(2025);
+  @override
+  void initState() {
+    super.initState();
+    SessionDBUtil.db.getAllSessions().then((session) => {
+          setState(() => {
+                _pendingAppointments = fetchAppointments(
+                    session.first.userId, session.first.token),
+              })
+        });
+  }
+
   _selectDate(BuildContext context, isStartDate) async {
     final DateTime picked = await showDatePicker(
       context: context,
@@ -33,6 +43,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         });
       }
     }
+  }
+
+  Widget renderNoResults(String message) {
+    return (Container(
+      padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+      child: Text(message),
+    ));
   }
 
   @override
@@ -94,15 +111,19 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     return FutureBuilder(
       future:
           _pendingAppointments, // a previously-obtained Future<String> or null
-      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-        List<Widget> children;
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        List<Widget> children = [];
         if (snapshot.hasData) {
-          List<Widget> appointments = new List<Widget>();
-          for (var i = 0; i < snapshot.data.length; i++) {
-            var appointment = Appointment.fromJson(snapshot.data[i]);
-            appointments.add(new AppointmentCard(appointment));
+          if (snapshot.data is String) {
+            children.add(renderNoResults(snapshot.data));
+          } else {
+            List<Widget> appointments = new List<Widget>();
+            for (var i = 0; i < snapshot.data.length; i++) {
+              var activity = Appointment.fromJson(snapshot.data[i]);
+              appointments.add(new AppointmentCard(activity));
+              children = appointments;
+            }
           }
-          children = appointments;
         } else if (snapshot.hasError) {
           children = <Widget>[
             Icon(

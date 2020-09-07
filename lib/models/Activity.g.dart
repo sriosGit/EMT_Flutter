@@ -8,10 +8,10 @@ part of 'Activity.dart';
 
 Activity _$ActivityFromJson(Map<String, dynamic> json) {
   return Activity(
-    json['action'] as String,
+    json['descripcion'] as String,
   );
 }
 
 Map<String, dynamic> _$ActivityToJson(Activity instance) => <String, dynamic>{
-      'action': instance.action,
+      'descripcion': instance.action,
     };

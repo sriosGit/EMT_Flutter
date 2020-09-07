@@ -1,4 +1,5 @@
 import 'package:SoyVidaApp/services/homeService.dart';
+import 'package:SoyVidaApp/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
 
 class AskHelpScreen extends StatefulWidget {
@@ -8,9 +9,21 @@ class AskHelpScreen extends StatefulWidget {
 
 class _AskHelpScreenState extends State<AskHelpScreen> {
   final requestHelpText = TextEditingController();
-  final userId = 1;
-  final token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBydWViYXNAZ21haWwuY29tIiwianRpIjoiYWI5MWE0YjQtMjEyZS00YTJmLWI3YWEtZWU4MWVhZTM4Mzk1IiwiZXhwIjoxNTk5MTc2MjY4LCJpc3MiOiJUZXN0LmNvbSIsImF1ZCI6IlRlc3QuY29tIn0.rfL0yNnl4R3Ou0Q36pplyocrvHAa6vaQyLnaRojk-Co";
+  int userId;
+  String token;
+
+  @override
+  void initState() {
+    super.initState();
+    SessionDBUtil.db.getAllSessions().then((session) => {
+          setState(() {
+            print(session);
+            userId = session.first.userId;
+            token = session[0].token;
+          })
+        });
+  }
+
   @override
   void dispose() {
     // Clean up the controller when the widget is removed from the

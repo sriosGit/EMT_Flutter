@@ -10,9 +10,17 @@ part "Evaluation.g.dart";
 @JsonSerializable()
 class Evaluation {
   final int id;
+
+  @JsonKey(name: 'contenido')
   final String status;
+
+  @JsonKey(name: 'descripcion')
   final String description;
+
+  @JsonKey(name: 'fechaEvaluacion', defaultValue: '19/07/2020')
   final String date;
+
+  @JsonKey(name: 'nombreEspecialista')
   final String tutorName;
 
   Evaluation(this.id, this.status, this.description, this.date, this.tutorName);

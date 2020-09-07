@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:SoyVidaApp/screens/homeScreen.dart';
 import 'package:SoyVidaApp/services/authService.dart';
 import 'package:SoyVidaApp/services/navigationService.dart';
 import 'package:SoyVidaApp/utils/locatorUtil.dart';
+import 'package:SoyVidaApp/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -12,6 +15,12 @@ class LoginScreen3 extends StatefulWidget {
 
 class _LoginScreen3State extends State<LoginScreen3>
     with TickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldSignInKey =
+      new GlobalKey<ScaffoldState>();
+
+  final GlobalKey<ScaffoldState> _scaffoldSignUpKey =
+      new GlobalKey<ScaffoldState>();
+
   // sign in controllers
   final usernameController = TextEditingController();
   final logInPasswordController = TextEditingController();
@@ -51,11 +60,22 @@ class _LoginScreen3State extends State<LoginScreen3>
   }
 
   // services triggers and callbacks
-
-  bool onSuccessLogin(res) {
+  // TODO: ordenar esta gracia
+  Future<bool> onSuccessLogin(res) async {
+    if (res != "Correo u contraseña inválida...") {
+      print("Succesful Login ");
+      SessionDBUtil.db.deleteAllSession().then((deleted) => {
+            SessionDBUtil.db.addSessionToDatabase(res).then((response) =>
+                {locator<NavigationService>().navigateTo('home')}),
+          });
+    } else {
+      _scaffoldSignInKey.currentState.showSnackBar(SnackBar(
+        content: new Text('Error: $res'),
+        duration: new Duration(seconds: 10),
+      ));
+    }
+    // locator<NavigationService>().navigateTo('home')}
     print(res);
-    print("Succesful Login ");
-    locator<NavigationService>().navigateTo('home');
     return true;
   }
 
@@ -71,15 +91,37 @@ class _LoginScreen3State extends State<LoginScreen3>
         onErrorLogin);
   }
 
-  bool onSuccessSignup(res) {
+  // TODO: ordenar esta gracia
+  Future<bool> onSuccessSignup(res) async {
     print(res);
-    locator<NavigationService>().navigateTo('home');
+    if (res is String)
+      _scaffoldSignUpKey.currentState.showSnackBar(SnackBar(
+        content: new Text('Error: $res'),
+        duration: new Duration(seconds: 10),
+      ));
+    else {
+      _scaffoldSignUpKey.currentState.showSnackBar(SnackBar(
+        content: new Text('Registro Exitoso'),
+        duration: new Duration(seconds: 10),
+      ));
+
+      SessionDBUtil.db.deleteAllSession().then((deleted) => {
+            SessionDBUtil.db.addSessionToDatabase(res).then(
+                  (response) => {
+                    Timer(Duration(seconds: 2),
+                        () => locator<NavigationService>().navigateTo('home'))
+                  },
+                ),
+          });
+    }
     return true;
   }
 
   bool onErrorSignup(res) {
-    print(res);
-    print("Error SignUp ");
+    _scaffoldSignUpKey.currentState.showSnackBar(SnackBar(
+      content: new Text('Error: $res'),
+      duration: new Duration(seconds: 10),
+    ));
     return true;
   }
 
@@ -95,7 +137,7 @@ class _LoginScreen3State extends State<LoginScreen3>
       signUpPasswordController.text,
       rePasswordController.text,
       int.parse(dniController.text),
-      "Student",
+      "Estudiante",
       onSuccessSignup,
       onErrorSignup,
     );
@@ -348,328 +390,339 @@ class _LoginScreen3State extends State<LoginScreen3>
 
   Widget loginPage() {
     return Scaffold(
+        key: _scaffoldSignInKey,
         body: Container(
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.symmetric(vertical: 50.0, horizontal: 0),
-            child: Stack(
-              children: <Widget>[
-                Positioned(
-                    right: 0,
-                    child: FlatButton(
-                      child: FaIcon(FontAwesomeIcons.angleRight,
-                          color: Colors.blue, size: 30.0),
-                      onPressed: () => gotoWelcome(),
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.symmetric(vertical: 50.0, horizontal: 0),
+                child: Stack(
+                  children: <Widget>[
+                    Positioned(
+                        right: 0,
+                        child: FlatButton(
+                          child: FaIcon(FontAwesomeIcons.angleRight,
+                              color: Colors.blue, size: 30.0),
+                          onPressed: () => gotoWelcome(),
+                        )),
+                    Center(
+                        child: Icon(
+                      Icons.favorite,
+                      color: Colors.blue,
+                      size: 50.0,
                     )),
-                Center(
-                    child: Icon(
-                  Icons.favorite,
-                  color: Colors.blue,
-                  size: 50.0,
-                )),
-              ],
-            ),
-          ),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 40.0),
-                  child: Text(
-                    "EMAIL",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                      fontSize: 15.0,
-                    ),
-                  ),
+                  ],
                 ),
               ),
-            ],
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            margin:
-                const EdgeInsets.only(left: 40.0, right: 40.0, bottom: 30.0),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                    color: Colors.blue, width: 1, style: BorderStyle.solid),
-              ),
-            ),
-            padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    controller: usernameController,
-                    textAlign: TextAlign.left,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'tucorreo@correo.com',
-                      hintStyle: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 40.0),
-                  child: Text(
-                    "CONTRASEÑA",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                    color: Colors.blue, width: 1, style: BorderStyle.solid),
-              ),
-            ),
-            padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    controller: logInPasswordController,
-                    obscureText: true,
-                    textAlign: TextAlign.left,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: '*********',
-                      hintStyle: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: FlatButton(
-                  child: Text(
-                    "¿Olvidaste tu contraseña?",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                      fontSize: 15.0,
-                    ),
-                    textAlign: TextAlign.end,
-                  ),
-                  onPressed: () => {},
-                ),
-              ),
-            ],
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
-            alignment: Alignment.center,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: FlatButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    color: Colors.blue,
-                    onPressed: () => {_onClickLogin()},
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20.0,
-                        horizontal: 20.0,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              "INICIAR SESIÓN",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 40.0),
+                      child: Text(
+                        "EMAIL",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                          fontSize: 15.0,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
-            alignment: Alignment.center,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(border: Border.all(width: 0.25)),
+                ],
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.only(
+                    left: 40.0, right: 40.0, bottom: 30.0),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                        color: Colors.blue, width: 1, style: BorderStyle.solid),
                   ),
                 ),
-                Text(
-                  "O INGRESA CON",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(border: Border.all(width: 0.25)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.only(right: 8.0),
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: FlatButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                            color: Color(0Xff3B5998),
-                            onPressed: () => {},
-                            child: Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: FlatButton(
-                                      onPressed: () => {},
-                                      padding: EdgeInsets.only(
-                                        top: 20.0,
-                                        bottom: 20.0,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: <Widget>[
-                                          FaIcon(FontAwesomeIcons.facebookF,
-                                              color: Colors.white, size: 20.0),
-                                          Text(
-                                            "FACEBOOK",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        controller: usernameController,
+                        textAlign: TextAlign.left,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'tucorreo@correo.com',
+                          hintStyle: TextStyle(color: Colors.grey),
                         ),
-                      ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 40.0),
+                      child: Text(
+                        "CONTRASEÑA",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                          fontSize: 15.0,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.only(left: 8.0),
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: FlatButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                            color: Color(0Xffdb3236),
-                            onPressed: () => {},
-                            child: Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: FlatButton(
-                                      onPressed: () => {},
-                                      padding: EdgeInsets.only(
-                                        top: 20.0,
-                                        bottom: 20.0,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: <Widget>[
-                                          FaIcon(FontAwesomeIcons.googlePlusG,
-                                              color: Colors.white, size: 20.0),
-                                          Text(
-                                            "GOOGLE",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                ],
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin:
+                    const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                        color: Colors.blue, width: 1, style: BorderStyle.solid),
                   ),
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
-    ));
+                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        controller: logInPasswordController,
+                        obscureText: true,
+                        textAlign: TextAlign.left,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: '*********',
+                          hintStyle: TextStyle(color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: FlatButton(
+                      child: Text(
+                        "¿Olvidaste tu contraseña?",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                          fontSize: 15.0,
+                        ),
+                        textAlign: TextAlign.end,
+                      ),
+                      onPressed: () => {},
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin:
+                    const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
+                alignment: Alignment.center,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        color: Colors.blue,
+                        onPressed: () => {_onClickLogin()},
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 20.0,
+                            horizontal: 20.0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                child: Text(
+                                  "INICIAR SESIÓN",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin:
+                    const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
+                alignment: Alignment.center,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.all(8.0),
+                        decoration:
+                            BoxDecoration(border: Border.all(width: 0.25)),
+                      ),
+                    ),
+                    Text(
+                      "O INGRESA CON",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.all(8.0),
+                        decoration:
+                            BoxDecoration(border: Border.all(width: 0.25)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin:
+                    const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(right: 8.0),
+                        alignment: Alignment.center,
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: FlatButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                color: Color(0Xff3B5998),
+                                onPressed: () => {},
+                                child: Container(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: FlatButton(
+                                          onPressed: () => {},
+                                          padding: EdgeInsets.only(
+                                            top: 20.0,
+                                            bottom: 20.0,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: <Widget>[
+                                              FaIcon(FontAwesomeIcons.facebookF,
+                                                  color: Colors.white,
+                                                  size: 20.0),
+                                              Text(
+                                                "FACEBOOK",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(left: 8.0),
+                        alignment: Alignment.center,
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: FlatButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                color: Color(0Xffdb3236),
+                                onPressed: () => {},
+                                child: Container(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: FlatButton(
+                                          onPressed: () => {},
+                                          padding: EdgeInsets.only(
+                                            top: 20.0,
+                                            bottom: 20.0,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: <Widget>[
+                                              FaIcon(
+                                                  FontAwesomeIcons.googlePlusG,
+                                                  color: Colors.white,
+                                                  size: 20.0),
+                                              Text(
+                                                "GOOGLE",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ));
   }
 
   Widget signupPage() {
     return Scaffold(
+        key: _scaffoldSignUpKey,
         body: Container(
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
@@ -1235,11 +1288,12 @@ class _LoginScreen3State extends State<LoginScreen3>
     );
   }
 
+/*
   _completeLogin() {
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
   }
-
+*/
   PageController _controller =
       PageController(initialPage: 1, viewportFraction: 1.0);
 

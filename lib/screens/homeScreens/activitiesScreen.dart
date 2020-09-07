@@ -1,6 +1,7 @@
 import 'package:SoyVidaApp/components/activityCard.dart';
 import 'package:SoyVidaApp/models/Activity.dart';
-import 'package:SoyVidaApp/screens/homeScreens/data.dart';
+import 'package:SoyVidaApp/services/homeService.dart';
+import 'package:SoyVidaApp/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
 
 class ActivitiesScreen extends StatefulWidget {
@@ -9,14 +10,22 @@ class ActivitiesScreen extends StatefulWidget {
 }
 
 class _ActivitiesScreenState extends State<ActivitiesScreen> {
-  Future<List> _pendingActivities = Future<List>.delayed(
-    Duration(seconds: 2),
-    () => ConstantData.activities,
-  );
-  Future<List> _completedActivities = Future<List>.delayed(
-    Duration(seconds: 2),
-    () => ConstantData.activities,
-  );
+  Future<dynamic> _pendingActivities;
+  Future<dynamic> _completedActivities;
+
+  @override
+  void initState() {
+    super.initState();
+    SessionDBUtil.db.getAllSessions().then((session) => {
+          setState(() => {
+                _pendingActivities = fetchActivities(
+                    session.first.userId, session.first.token, 1),
+                _completedActivities = fetchActivities(
+                    session.first.userId, session.first.token, 2),
+              })
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,19 +61,31 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
     );
   }
 
+  Widget renderNoResults(String message) {
+    return (Container(
+      padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+      child: Text(message),
+    ));
+  }
+
   Widget pendingActivities() {
     return FutureBuilder(
       future:
           _pendingActivities, // a previously-obtained Future<String> or null
-      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-        List<Widget> children;
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        print(snapshot.hasData);
+        List<Widget> children = [];
         if (snapshot.hasData) {
-          List<Widget> tests = new List<Widget>();
-          for (var i = 0; i < snapshot.data.length; i++) {
-            var activity = Activity.fromJson(snapshot.data[i]);
-            tests.add(new ActivityCard(activity));
+          if (snapshot.data is String) {
+            children.add(renderNoResults(snapshot.data));
+          } else {
+            List<Widget> activities = new List<Widget>();
+            for (var i = 0; i < snapshot.data.length; i++) {
+              var activity = Activity.fromJson(snapshot.data[i]);
+              activities.add(new ActivityCard(activity));
+              children = activities;
+            }
           }
-          children = tests;
         } else if (snapshot.hasError) {
           children = <Widget>[
             Icon(
@@ -104,15 +125,19 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
     return FutureBuilder(
       future:
           _completedActivities, // a previously-obtained Future<String> or null
-      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-        List<Widget> children;
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        List<Widget> children = [];
         if (snapshot.hasData) {
-          List<Widget> activities = new List<Widget>();
-          for (var i = 0; i < snapshot.data.length; i++) {
-            var activity = Activity.fromJson(snapshot.data[i]);
-            activities.add(new ActivityCard(activity));
+          if (snapshot.data is String) {
+            children.add(renderNoResults(snapshot.data));
+          } else {
+            List<Widget> activities = new List<Widget>();
+            for (var i = 0; i < snapshot.data.length; i++) {
+              var activity = Activity.fromJson(snapshot.data[i]);
+              activities.add(new ActivityCard(activity));
+              children = activities;
+            }
           }
-          children = activities;
         } else if (snapshot.hasError) {
           children = <Widget>[
             Icon(

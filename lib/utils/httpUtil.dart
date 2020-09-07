@@ -47,7 +47,7 @@ class HttpUtil {
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
       print("Exito");
-      return jsonResponse["data"];
+      return jsonResponse;
       // var itemCount = jsonResponse['totalItems'];
     } else {
       print("Error");
@@ -62,7 +62,6 @@ class HttpUtil {
 
     // Await the http get response, then decode the json-formatted response.
     var body = convert.jsonEncode(params);
-    print(body);
     Map<String, String> headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
@@ -71,6 +70,7 @@ class HttpUtil {
     };
     var response = await http.post(url, body: body, headers: headers);
     if (response.body.isNotEmpty) {
+      print(response.body);
       print("Exito");
       var jsonResponse = convert.jsonDecode(response.body);
       if (successCallback != null) {
@@ -100,7 +100,7 @@ class HttpUtil {
       'x-requested-with': '*',
     };
     var response = await http.put(url, body: body, headers: headers);
-    print(response);
+
     if (response.body.isNotEmpty) {
       print("Exito");
       var jsonResponse = convert.jsonDecode(response.body);

@@ -1,6 +1,7 @@
 import 'package:SoyVidaApp/components/evaluationCard.dart';
 import 'package:SoyVidaApp/models/Evaluation.dart';
-import 'package:SoyVidaApp/screens/homeScreens/data.dart';
+import 'package:SoyVidaApp/services/homeService.dart';
+import 'package:SoyVidaApp/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
 
 class EvaluationsScreen extends StatefulWidget {
@@ -9,14 +10,21 @@ class EvaluationsScreen extends StatefulWidget {
 }
 
 class _EvaluationsScreenState extends State<EvaluationsScreen> {
-  Future<List> _pendingTests = Future<List>.delayed(
-    Duration(seconds: 2),
-    () => ConstantData.pendingEvaluations,
-  );
-  Future<List> _completedTests = Future<List>.delayed(
-    Duration(seconds: 2),
-    () => ConstantData.pendingEvaluations,
-  );
+  Future<dynamic> _pendingEvaluations;
+  Future<dynamic> _completedEvaluations;
+  @override
+  void initState() {
+    super.initState();
+    SessionDBUtil.db.getAllSessions().then((session) => {
+          setState(() => {
+                _pendingEvaluations = fetchEvaluations(
+                    session.first.userId, session.first.token, 1),
+                _completedEvaluations = fetchEvaluations(
+                    session.first.userId, session.first.token, 2),
+              })
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +51,7 @@ class _EvaluationsScreenState extends State<EvaluationsScreen> {
           ),
           body: TabBarView(
             children: [
-              pendingTests(),
+              pendingEvaluations(),
               completedTests(),
             ],
           ),
@@ -52,18 +60,31 @@ class _EvaluationsScreenState extends State<EvaluationsScreen> {
     );
   }
 
-  Widget pendingTests() {
+  Widget renderNoResults(String message) {
+    return (Container(
+      padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+      child: Text(message),
+    ));
+  }
+
+  Widget pendingEvaluations() {
     return FutureBuilder(
-      future: _pendingTests, // a previously-obtained Future<String> or null
-      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-        List<Widget> children;
+      future:
+          _pendingEvaluations, // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        List<Widget> children = [];
         if (snapshot.hasData) {
-          List<Widget> tests = new List<Widget>();
-          for (var i = 0; i < snapshot.data.length; i++) {
-            var evaluation = Evaluation.fromJson(snapshot.data[i]);
-            tests.add(new EvaluationCard(evaluation));
+          if (snapshot.data is String) {
+            children.add(renderNoResults(snapshot.data));
+          } else {
+            List<Widget> evaluations = new List<Widget>();
+            for (var i = 0; i < snapshot.data.length; i++) {
+              var activity = Evaluation.fromJson(snapshot.data[i]);
+              evaluations.add(new EvaluationCard(activity));
+              children = evaluations;
+            }
+            children = evaluations;
           }
-          children = tests;
         } else if (snapshot.hasError) {
           children = <Widget>[
             Icon(
@@ -101,16 +122,22 @@ class _EvaluationsScreenState extends State<EvaluationsScreen> {
 
   Widget completedTests() {
     return FutureBuilder(
-      future: _completedTests, // a previously-obtained Future<String> or null
-      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-        List<Widget> children;
+      future:
+          _completedEvaluations, // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        List<Widget> children = [];
         if (snapshot.hasData) {
-          List<Widget> tests = new List<Widget>();
-          for (var i = 0; i < snapshot.data.length; i++) {
-            var evaluation = Evaluation.fromJson(snapshot.data[i]);
-            tests.add(new EvaluationCard(evaluation));
+          if (snapshot.data is String) {
+            children.add(renderNoResults(snapshot.data));
+          } else {
+            List<Widget> evaluations = new List<Widget>();
+            for (var i = 0; i < snapshot.data.length; i++) {
+              var activity = Evaluation.fromJson(snapshot.data[i]);
+              evaluations.add(new EvaluationCard(activity));
+              children = evaluations;
+            }
+            children = evaluations;
           }
-          children = tests;
         } else if (snapshot.hasError) {
           children = <Widget>[
             Icon(

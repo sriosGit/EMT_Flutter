@@ -24,6 +24,9 @@ dependencies:
   font_awesome_flutter: 8.8.1
   json_annotation: ^3.0.0
   get_it: ^1.0.3
+  sqflite:
+  path:
+  path_provider: 1.3.0
   flutter:
     sdk: flutter
   http:

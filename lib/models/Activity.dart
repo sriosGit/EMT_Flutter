@@ -9,6 +9,7 @@ part 'Activity.g.dart';
 /// JSON serialization logic to be generated.
 @JsonSerializable()
 class Activity {
+  @JsonKey(name: 'descripcion')
   final String action;
   Activity(this.action);
 

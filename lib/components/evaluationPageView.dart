@@ -1,6 +1,6 @@
-import 'package:SoyVidaApp/models/Alternative.dart';
-import 'package:SoyVidaApp/models/Question.dart';
-import 'package:SoyVidaApp/screens/homeScreens/data.dart';
+import 'package:EMT/models/Alternative.dart';
+import 'package:EMT/models/Question.dart';
+import 'package:EMT/screens/homeScreens/data.dart';
 import 'package:flutter/material.dart';
 
 class EvaluationPageView extends StatefulWidget {

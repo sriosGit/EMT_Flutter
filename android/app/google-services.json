@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "938454960430",
+    "firebase_url": "https://emt-auth.firebaseio.com",
+    "project_id": "emt-auth",
+    "storage_bucket": "emt-auth.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:938454960430:android:a47773bb542882145212bf",
+        "android_client_info": {
+          "package_name": "com.upc.emt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "938454960430-0v2s6uqka10bgsj2p0bprsjmhdlv97nu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDj8cHM_aZNYQX8W4vGE9UhduHLshn2Lvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "938454960430-0v2s6uqka10bgsj2p0bprsjmhdlv97nu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

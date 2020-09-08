@@ -1,4 +1,4 @@
-import 'package:SoyVidaApp/models/Appointment.dart';
+import 'package:EMT/models/Appointment.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentCard extends StatelessWidget {

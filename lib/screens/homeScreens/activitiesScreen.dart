@@ -1,7 +1,7 @@
-import 'package:SoyVidaApp/components/activityCard.dart';
-import 'package:SoyVidaApp/models/Activity.dart';
-import 'package:SoyVidaApp/services/homeService.dart';
-import 'package:SoyVidaApp/utils/sessionDBUtil.dart';
+import 'package:EMT/components/activityCard.dart';
+import 'package:EMT/models/Activity.dart';
+import 'package:EMT/services/homeService.dart';
+import 'package:EMT/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
 
 class ActivitiesScreen extends StatefulWidget {

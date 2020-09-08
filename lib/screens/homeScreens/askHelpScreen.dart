@@ -1,5 +1,5 @@
-import 'package:SoyVidaApp/services/homeService.dart';
-import 'package:SoyVidaApp/utils/sessionDBUtil.dart';
+import 'package:EMT/services/homeService.dart';
+import 'package:EMT/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
 
 class AskHelpScreen extends StatefulWidget {

@@ -1,4 +1,4 @@
-import 'package:SoyVidaApp/models/Activity.dart';
+import 'package:EMT/models/Activity.dart';
 import 'package:flutter/material.dart';
 
 class ActivityCard extends StatelessWidget {

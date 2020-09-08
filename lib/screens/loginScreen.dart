@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:SoyVidaApp/screens/homeScreen.dart';
-import 'package:SoyVidaApp/services/authService.dart';
-import 'package:SoyVidaApp/services/navigationService.dart';
-import 'package:SoyVidaApp/utils/locatorUtil.dart';
-import 'package:SoyVidaApp/utils/sessionDBUtil.dart';
+import 'package:EMT/services/authService.dart';
+import 'package:EMT/services/navigationService.dart';
+import 'package:EMT/utils/locatorUtil.dart';
+import 'package:EMT/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -306,7 +305,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                       color: Color(0Xff3B5998),
-                      onPressed: () => {},
+                      onPressed: () => {facebookLogin()},
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
@@ -333,7 +332,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                       color: Color(0Xffdb3236),
-                      onPressed: () => {},
+                      onPressed: () => {googleLogin()},
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[

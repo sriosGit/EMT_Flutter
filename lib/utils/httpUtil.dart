@@ -1,5 +1,5 @@
 import 'dart:convert' as convert;
-import 'package:SoyVidaApp/config/apiUrls.dart';
+import 'package:EMT/config/apiUrls.dart';
 import 'package:http/http.dart' as http;
 
 class HttpUtil {

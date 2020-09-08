@@ -1,10 +1,9 @@
-import 'package:SoyVidaApp/screens/homeScreens/activitiesScreen.dart';
-import 'package:SoyVidaApp/screens/homeScreens/profileScreen.dart';
-import 'package:SoyVidaApp/screens/notificationsScreen.dart';
-import 'package:SoyVidaApp/screens/PlaceHolderWidget.dart';
-import 'package:SoyVidaApp/screens/homeScreens/appointmentsScreen.dart';
-import 'package:SoyVidaApp/screens/homeScreens/askHelpScreen.dart';
-import 'package:SoyVidaApp/screens/homeScreens/evaluationsScreen.dart';
+import 'package:EMT/screens/homeScreens/activitiesScreen.dart';
+import 'package:EMT/screens/homeScreens/profileScreen.dart';
+import 'package:EMT/screens/notificationsScreen.dart';
+import 'package:EMT/screens/homeScreens/appointmentsScreen.dart';
+import 'package:EMT/screens/homeScreens/askHelpScreen.dart';
+import 'package:EMT/screens/homeScreens/evaluationsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

@@ -1,7 +1,7 @@
-import 'package:SoyVidaApp/components/evaluationCard.dart';
-import 'package:SoyVidaApp/models/Evaluation.dart';
-import 'package:SoyVidaApp/services/homeService.dart';
-import 'package:SoyVidaApp/utils/sessionDBUtil.dart';
+import 'package:EMT/components/evaluationCard.dart';
+import 'package:EMT/models/Evaluation.dart';
+import 'package:EMT/services/homeService.dart';
+import 'package:EMT/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
 
 class EvaluationsScreen extends StatefulWidget {

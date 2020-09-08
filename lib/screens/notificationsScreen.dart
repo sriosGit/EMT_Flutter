@@ -1,6 +1,6 @@
-import 'package:SoyVidaApp/components/notificationCard.dart';
-import 'package:SoyVidaApp/models/PushedNotification.dart';
-import 'package:SoyVidaApp/screens/homeScreens/data.dart';
+import 'package:EMT/components/notificationCard.dart';
+import 'package:EMT/models/PushedNotification.dart';
+import 'package:EMT/screens/homeScreens/data.dart';
 import 'package:flutter/material.dart';
 
 class NotificationsScreen extends StatefulWidget {

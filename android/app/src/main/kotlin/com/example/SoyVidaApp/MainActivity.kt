@@ -1,4 +1,4 @@
-package com.example.SoyVidaApp
+package com.upc.emt
 
 import io.flutter.embedding.android.FlutterActivity
 

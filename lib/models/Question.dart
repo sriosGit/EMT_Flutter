@@ -1,4 +1,4 @@
-import 'package:SoyVidaApp/models/Alternative.dart';
+import 'package:EMT/models/Alternative.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 /// This allows the `Question` class to access private members in

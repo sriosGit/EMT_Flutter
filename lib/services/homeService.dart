@@ -1,6 +1,5 @@
-import 'package:SoyVidaApp/config/apiUrls.dart';
-import 'package:SoyVidaApp/models/Activity.dart';
-import 'package:SoyVidaApp/utils/httpUtil.dart';
+import 'package:EMT/config/apiUrls.dart';
+import 'package:EMT/utils/httpUtil.dart';
 
 void requestHelp(int userId, String token, String message, Function success,
     Function error) async {

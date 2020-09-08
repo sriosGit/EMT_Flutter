@@ -1,6 +1,6 @@
-import 'package:SoyVidaApp/components/infoCard.dart';
-import 'package:SoyVidaApp/models/User.dart';
-import 'package:SoyVidaApp/screens/homeScreens/data.dart';
+import 'package:EMT/components/infoCard.dart';
+import 'package:EMT/models/User.dart';
+import 'package:EMT/screens/homeScreens/data.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {

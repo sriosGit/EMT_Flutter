@@ -1,7 +1,7 @@
-import 'package:SoyVidaApp/screens/homeScreen.dart';
-import 'package:SoyVidaApp/screens/loginScreen.dart';
-import 'package:SoyVidaApp/services/navigationService.dart';
-import 'package:SoyVidaApp/utils/locatorUtil.dart';
+import 'package:EMT/screens/homeScreen.dart';
+import 'package:EMT/screens/loginScreen.dart';
+import 'package:EMT/services/navigationService.dart';
+import 'package:EMT/utils/locatorUtil.dart';
 import 'package:flutter/material.dart';
 
 void main() {

@@ -37,7 +37,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   static String name = user.firstName + ' ' + user.lastName;
   @override
   Widget build(BuildContext context) {
-    print(name);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(

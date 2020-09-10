@@ -9,8 +9,11 @@ part 'Alternative.g.dart';
 /// JSON serialization logic to be generated.
 @JsonSerializable()
 class Alternative {
+  @JsonKey(name: "nombreAlternativa")
   final String description;
-  final String value;
+
+  @JsonKey(name: "ordenAlternativa")
+  final int value;
   Alternative(this.description, this.value);
 
   /// A necessary factory constructor for creating a new User instance

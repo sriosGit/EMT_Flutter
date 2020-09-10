@@ -8,13 +8,13 @@ part of 'Alternative.dart';
 
 Alternative _$AlternativeFromJson(Map<String, dynamic> json) {
   return Alternative(
-    json['description'] as String,
-    json['value'] as String,
+    json['nombreAlternativa'] as String,
+    json['ordenAlternativa'] as int,
   );
 }
 
 Map<String, dynamic> _$AlternativeToJson(Alternative instance) =>
     <String, dynamic>{
-      'description': instance.description,
-      'value': instance.value,
+      'nombreAlternativa': instance.description,
+      'ordenAlternativa': instance.value,
     };

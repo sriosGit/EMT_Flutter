@@ -73,7 +73,6 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
       future:
           _pendingActivities, // a previously-obtained Future<String> or null
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        print(snapshot.hasData);
         List<Widget> children = [];
         if (snapshot.hasData) {
           if (snapshot.data is String) {

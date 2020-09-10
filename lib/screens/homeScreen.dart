@@ -41,49 +41,53 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(_appbarTitles[_currentIndex]),
-        actions: [
-          IconButton(
-            icon: FaIcon(FontAwesomeIcons.bell),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          NotificationsScreen()));
-            },
-          ),
-        ],
-      ),
-      body: _children[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        onTap: onTabTapped, // new
-        currentIndex:
-            _currentIndex, // this will be set when a new tab is tapped
-        items: [
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.commentAlt),
-            title: new Text('Ayuda'),
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.clipboardCheck),
-            title: new Text('Evaluacion'),
-          ),
-          BottomNavigationBarItem(
-              icon: FaIcon(FontAwesomeIcons.calendarAlt), title: Text('Citas')),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.heartbeat),
-            title: new Text('Actividades'),
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.userAlt),
-            title: new Text('Perfil'),
-          ),
-        ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(_appbarTitles[_currentIndex]),
+          actions: [
+            IconButton(
+              icon: FaIcon(FontAwesomeIcons.bell),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            NotificationsScreen()));
+              },
+            ),
+          ],
+        ),
+        body: _children[_currentIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          onTap: onTabTapped, // new
+          currentIndex:
+              _currentIndex, // this will be set when a new tab is tapped
+          items: [
+            BottomNavigationBarItem(
+              icon: FaIcon(FontAwesomeIcons.commentAlt),
+              title: new Text('Ayuda'),
+            ),
+            BottomNavigationBarItem(
+              icon: FaIcon(FontAwesomeIcons.clipboardCheck),
+              title: new Text('Evaluacion'),
+            ),
+            BottomNavigationBarItem(
+                icon: FaIcon(FontAwesomeIcons.calendarAlt),
+                title: Text('Citas')),
+            BottomNavigationBarItem(
+              icon: FaIcon(FontAwesomeIcons.heartbeat),
+              title: new Text('Actividades'),
+            ),
+            BottomNavigationBarItem(
+              icon: FaIcon(FontAwesomeIcons.userAlt),
+              title: new Text('Perfil'),
+            ),
+          ],
+        ),
       ),
     );
   }

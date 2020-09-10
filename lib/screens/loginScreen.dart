@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:EMT/screens/homeScreen.dart';
 import 'package:EMT/services/authService.dart';
-import 'package:EMT/services/navigationService.dart';
-import 'package:EMT/utils/locatorUtil.dart';
+import 'package:EMT/services/facebookAuth.dart';
+import 'package:EMT/services/googleAuth.dart';
 import 'package:EMT/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -64,8 +65,9 @@ class _LoginScreen3State extends State<LoginScreen3>
     if (res != "Correo u contraseña inválida...") {
       print("Succesful Login ");
       SessionDBUtil.db.deleteAllSession().then((deleted) => {
-            SessionDBUtil.db.addSessionToDatabase(res).then((response) =>
-                {locator<NavigationService>().navigateTo('home')}),
+            SessionDBUtil.db
+                .addSessionToDatabase(res)
+                .then((session) => {_completeLogin()}),
           });
     } else {
       _scaffoldSignInKey.currentState.showSnackBar(SnackBar(
@@ -106,10 +108,8 @@ class _LoginScreen3State extends State<LoginScreen3>
 
       SessionDBUtil.db.deleteAllSession().then((deleted) => {
             SessionDBUtil.db.addSessionToDatabase(res).then(
-                  (response) => {
-                    Timer(Duration(seconds: 2),
-                        () => locator<NavigationService>().navigateTo('home'))
-                  },
+                  (response) =>
+                      {Timer(Duration(seconds: 2), () => _completeLogin())},
                 ),
           });
     }
@@ -305,7 +305,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                       color: Color(0Xff3B5998),
-                      onPressed: () => {facebookLogin()},
+                      onPressed: () => {},
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
@@ -332,7 +332,19 @@ class _LoginScreen3State extends State<LoginScreen3>
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                       color: Color(0Xffdb3236),
-                      onPressed: () => {googleLogin()},
+                      onPressed: () => {
+                        signInWithGoogle().then((result) {
+                          if (result != null) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return HomeScreen();
+                                },
+                              ),
+                            );
+                          }
+                        }),
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
@@ -625,7 +637,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                                     children: <Widget>[
                                       Expanded(
                                         child: FlatButton(
-                                          onPressed: () => {},
+                                          onPressed: () => signInWithFacebook(),
                                           padding: EdgeInsets.only(
                                             top: 20.0,
                                             bottom: 20.0,
@@ -1287,12 +1299,11 @@ class _LoginScreen3State extends State<LoginScreen3>
     );
   }
 
-/*
   _completeLogin() {
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
   }
-*/
+
   PageController _controller =
       PageController(initialPage: 1, viewportFraction: 1.0);
 

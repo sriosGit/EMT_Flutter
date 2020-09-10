@@ -9,13 +9,17 @@ class EvaluationCard extends StatelessWidget {
   EvaluationCard(this.evaluation);
 
   _onTapCard(BuildContext context) async {
-    if (evaluation.status == "pending") {
+    if (evaluation.status == "PENDIENTE") {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  EvaluationPageView(evaluation.id)));
-    } else if (evaluation.status == "completed") {
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => EvaluationPageView(
+              userId: evaluation.idEstudiante,
+              evaluationId: evaluation.id,
+              evaluationObjId: evaluation.idObjetoEvaluacion),
+        ),
+      );
+    } else if (evaluation.status == "FINALIZADO") {
       print("TODO: Mostrar detalle");
     }
     return null;

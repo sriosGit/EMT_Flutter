@@ -10,9 +10,14 @@ part "Question.g.dart";
 /// JSON serialization logic to be generated.
 @JsonSerializable(explicitToJson: true)
 class Question {
+  @JsonKey(name: "nombrePregunta")
   final String title;
   final String body;
+
+  @JsonKey(defaultValue: "radio")
   final String type;
+
+  @JsonKey(name: "alternativa")
   final List<Alternative> alternatives;
 
   @JsonKey(defaultValue: "")

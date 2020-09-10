@@ -8,9 +8,12 @@ part of 'Evaluation.dart';
 
 Evaluation _$EvaluationFromJson(Map<String, dynamic> json) {
   return Evaluation(
-    json['id'] as int,
+    json['idEvaluacion'] as int,
+    json['idObjetoEvaluacion'] as int,
+    json['idEstudiante'] as int,
     json['contenido'] as String,
     json['descripcion'] as String,
+    json['nombreEvaluacion'] as String,
     json['fechaEvaluacion'] as String ?? '19/07/2020',
     json['nombreEspecialista'] as String,
   );
@@ -18,8 +21,11 @@ Evaluation _$EvaluationFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$EvaluationToJson(Evaluation instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      'idEvaluacion': instance.id,
+      'idObjetoEvaluacion': instance.idObjetoEvaluacion,
+      'idEstudiante': instance.idEstudiante,
       'contenido': instance.status,
+      'nombreEvaluacion': instance.nombreEvaluacion,
       'descripcion': instance.description,
       'fechaEvaluacion': instance.date,
       'nombreEspecialista': instance.tutorName,

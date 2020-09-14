@@ -8,6 +8,8 @@ class EvaluationPageView extends StatefulWidget {
   final int evaluationId;
   final int evaluationObjId;
   final int userId;
+  List<dynamic> answers;
+
   EvaluationPageView(
       {Key key,
       @required this.evaluationId,
@@ -50,6 +52,18 @@ class _EvaluationPageViewState extends State<EvaluationPageView>
         MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
   }
 */
+  void saveAnswer(idRespuesta, idPAlternativa, idEvaluacion,
+      idResultadoEvaluacion, puntaje) {
+    var answer = {
+      "IdPAlternativa": idPAlternativa,
+      "IdEvaluacion": idEvaluacion,
+      "IdResultadoEvaluacion": idResultadoEvaluacion,
+      "puntaje": puntaje,
+    };
+    widget.answers.add(answer);
+    print(widget.answers);
+  }
+
   Widget renderStartBtn() {
     return FlatButton(
       shape: RoundedRectangleBorder(
@@ -89,7 +103,7 @@ class _EvaluationPageViewState extends State<EvaluationPageView>
             .map(
               (alternative) => RadioListTile<int>(
                 title: Text(alternative.description),
-                value: alternative.value,
+                value: alternative.idPAlternativa,
                 groupValue: _selected,
                 onChanged: (value) {
                   setState(() {
@@ -143,7 +157,6 @@ class _EvaluationPageViewState extends State<EvaluationPageView>
 
   Widget radioQuestion(question) {
     String selectedOption = "";
-    print('jelo 2');
     return Scaffold(
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 30.0),

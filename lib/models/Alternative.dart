@@ -14,7 +14,10 @@ class Alternative {
 
   @JsonKey(name: "ordenAlternativa")
   final int value;
-  Alternative(this.description, this.value);
+
+  final int idPAlternativa;
+
+  Alternative(this.description, this.value, this.idPAlternativa);
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$AlternativeFromJson()` constructor.

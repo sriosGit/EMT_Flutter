@@ -16,3 +16,11 @@ Future<dynamic> fetchQuestions(
   HttpUtil client = new HttpUtil();
   return client.getRawRequest(url);
 }
+
+void sendAnswers(
+    List<dynamic> answers, Function success, Function error) async {
+  var params = {"answers": answers};
+  print(params);
+  HttpUtil client = new HttpUtil();
+  client.postRequest(sendAnswersUrl, params, success, error);
+}

@@ -9,13 +9,30 @@ part "Appointment.g.dart";
 /// JSON serialization logic to be generated.
 @JsonSerializable()
 class Appointment {
-  final int id;
-  final String status;
-  final String description;
-  final String date;
-  final String area;
+  final int idCita;
+  final String estadoCita;
 
-  Appointment(this.id, this.status, this.description, this.date, this.area);
+  final String nombre;
+
+  final String description;
+
+  @JsonKey(defaultValue: "13/09/2020")
+  final String fechaInicio;
+  @JsonKey(defaultValue: "13/09/2020")
+  final String fechaFin;
+  final String area;
+  final String primerNOmbre;
+  final String primerApellido;
+  Appointment(
+      this.idCita,
+      this.estadoCita,
+      this.nombre,
+      this.description,
+      this.fechaInicio,
+      this.fechaFin,
+      this.area,
+      this.primerNOmbre,
+      this.primerApellido);
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$EvaluationFromJson()` constructor.

@@ -30,22 +30,13 @@ class AppointmentCard extends StatelessWidget {
                               'Fecha de cita:',
                             ),
                             Text(
-                              appointment.date,
+                              appointment.fechaInicio
+                                  .toString()
+                                  .substring(0, 10),
                             ),
                           ],
                         ),
                         renderStatus(),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Area:',
-                              ),
-                              Text(
-                                appointment.area,
-                              ),
-                            ]),
                       ]),
                 ),
               ),
@@ -68,7 +59,7 @@ class AppointmentCard extends StatelessWidget {
   }
 
   Widget renderStatus() {
-    if (appointment.status == 'pending') {
+    if (appointment.estadoCita == 'PENDIENTE') {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

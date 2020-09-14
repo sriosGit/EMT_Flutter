@@ -29,9 +29,9 @@ class SessionDBUtil {
 
   addSessionToDatabase(session) async {
     final db = await database;
-
+    print(session.toString());
     Map<String, dynamic> row = {
-      "userId": session["id"],
+      "userId": session["idEstudiante"],
       "token": session["token"]
     };
     var raw = await db.insert(

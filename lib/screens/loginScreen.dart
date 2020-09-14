@@ -637,7 +637,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                                     children: <Widget>[
                                       Expanded(
                                         child: FlatButton(
-                                          onPressed: () => signInWithFacebook(),
+                                          onPressed: () => {},
                                           padding: EdgeInsets.only(
                                             top: 20.0,
                                             bottom: 20.0,

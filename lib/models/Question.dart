@@ -10,6 +10,9 @@ part "Question.g.dart";
 /// JSON serialization logic to be generated.
 @JsonSerializable(explicitToJson: true)
 class Question {
+  @JsonKey(name: "idPregunta")
+  final int id;
+
   @JsonKey(name: "nombrePregunta")
   final String title;
   final String body;
@@ -26,8 +29,8 @@ class Question {
   @JsonKey(defaultValue: "Siguiente")
   final String btnText;
 
-  Question(this.title, this.body, this.type, this.alternatives, this.answer,
-      this.btnText);
+  Question(this.id, this.title, this.body, this.type, this.alternatives,
+      this.answer, this.btnText);
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$QuestionFromJson()` constructor.

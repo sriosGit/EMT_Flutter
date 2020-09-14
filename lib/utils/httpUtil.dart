@@ -47,6 +47,7 @@ class HttpUtil {
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
       print("Exito");
+      print(jsonResponse);
       return jsonResponse;
       // var itemCount = jsonResponse['totalItems'];
     } else {

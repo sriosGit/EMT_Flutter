@@ -29,7 +29,8 @@ Future<dynamic> fetchAppointments(
   int userId,
   String token,
 ) async {
-  var url = activitiesUrl + '?id=' + userId.toString() + '&token=' + token;
+  var url =
+      appointmentsUrl + '?idAuUser=' + userId.toString() + '&token=' + token;
   HttpUtil client = new HttpUtil();
   return client.getRawRequest(url);
 }

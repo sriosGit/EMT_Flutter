@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:EMT/screens/homeScreen.dart';
 import 'package:EMT/services/authService.dart';
-import 'package:EMT/services/facebookAuth.dart';
-import 'package:EMT/services/googleAuth.dart';
 import 'package:EMT/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -305,7 +303,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                       color: Color(0Xff3B5998),
-                      onPressed: () => {},
+                      onPressed: facebookLogin,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
@@ -332,19 +330,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                       color: Color(0Xffdb3236),
-                      onPressed: () => {
-                        signInWithGoogle().then((result) {
-                          if (result != null) {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return HomeScreen();
-                                },
-                              ),
-                            );
-                          }
-                        }),
-                      },
+                      onPressed: googleLogin,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[

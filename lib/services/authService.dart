@@ -1,5 +1,7 @@
 import 'package:EMT/config/apiUrls.dart';
 import 'package:EMT/utils/httpUtil.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 void login(
     String username, String password, Function success, Function error) async {
@@ -37,4 +39,60 @@ void createUser(
   print(params);
   HttpUtil client = new HttpUtil();
   client.putRequest(registerUrl, params, success, error);
+}
+
+Future<Null> facebookLogin() async {
+  FacebookLogin facebookSignIn = new FacebookLogin();
+  final FacebookLoginResult result =
+      await facebookSignIn.logInWithReadPermissions(['email']);
+
+  switch (result.status) {
+    case FacebookLoginStatus.loggedIn:
+      final FacebookAccessToken accessToken = result.accessToken;
+      print('''
+         Logged in!
+         
+         Token: ${accessToken.token}
+         User id: ${accessToken.userId}
+         Expires: ${accessToken.expires}
+         Permissions: ${accessToken.permissions}
+         Declined permissions: ${accessToken.declinedPermissions}
+         ''');
+      break;
+    case FacebookLoginStatus.cancelledByUser:
+      print('Login cancelled by the user.');
+      break;
+    case FacebookLoginStatus.error:
+      print('Something went wrong with the login process.\n'
+          'Here\'s the error Facebook gave us: ${result.errorMessage}');
+      break;
+  }
+}
+
+Future<Null> _facebookLogOut() async {
+  FacebookLogin facebookSignIn = new FacebookLogin();
+  await facebookSignIn.logOut();
+  print('Logged out.');
+}
+
+void googleLogin() async {
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      // you can add extras if you require
+    ],
+  );
+
+  _googleSignIn.signIn().then((GoogleSignInAccount acc) async {
+    GoogleSignInAuthentication auth = await acc.authentication;
+    print(acc.id);
+    print(acc.email);
+    print(acc.displayName);
+    print(acc.photoUrl);
+
+    acc.authentication.then((GoogleSignInAuthentication auth) async {
+      print(auth.idToken);
+      print(auth.accessToken);
+    });
+  });
 }

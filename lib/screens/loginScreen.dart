@@ -34,6 +34,11 @@ class _LoginScreen3State extends State<LoginScreen3>
   final rePasswordController = TextEditingController();
   final dniController = TextEditingController();
 
+  //facebook vars
+  String fbToken = "";
+  String fbUserId = "";
+  bool showCompleteData = false;
+
   @override
   void dispose() {
     // Clean up the controller when the widget is removed from the
@@ -135,10 +140,33 @@ class _LoginScreen3State extends State<LoginScreen3>
       rePasswordController.text,
       int.parse(dniController.text),
       "Estudiante",
+      fbToken,
+      fbUserId,
       onSuccessSignup,
       onErrorSignup,
     );
   }
+
+  //FACEBOOK LOGIN
+
+  dynamic onSuccessFb(accessToken, graphResponse) {
+    firstName1Controller.text = graphResponse["first_name"];
+    lastName1Controller.text = graphResponse["last_name"];
+    emailController.text = graphResponse["email"];
+    setState(() {
+      showCompleteData = true;
+      fbToken = accessToken.token;
+      fbUserId = accessToken.userId;
+    });
+    gotoEmailRegisterWith();
+  }
+
+  dynamic onErrorFb() {
+    print("something is wrong");
+  }
+
+  void onClickFbLogin() {}
+  onErrorFbLogin() {}
 
   Widget homePage() {
     return Scaffold(
@@ -303,7 +331,8 @@ class _LoginScreen3State extends State<LoginScreen3>
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                       color: Color(0Xff3B5998),
-                      onPressed: facebookLogin,
+                      onPressed: () =>
+                          facebookLogin(onSuccessFb, onErrorFb, context),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
@@ -718,6 +747,28 @@ class _LoginScreen3State extends State<LoginScreen3>
   }
 
   Widget signupPage() {
+    Widget completeDataMessage = showCompleteData
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: FlatButton(
+                  onPressed: () => gotoLogin(),
+                  child: Text(
+                    "Por favor, completa tus datos",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                      fontSize: 20.0,
+                    ),
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ),
+            ],
+          )
+        : Container();
     return Scaffold(
         key: _scaffoldSignUpKey,
         body: Container(
@@ -740,6 +791,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         ),
                       ),
                     ),
+                    completeDataMessage,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
@@ -1205,6 +1257,38 @@ class _LoginScreen3State extends State<LoginScreen3>
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, bottom: 30.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blue,
+                              width: 1,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            child: TextField(
+                              controller: dniController,
+                              textAlign: TextAlign.left,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Ingresa tu Colegio',
+                                hintStyle: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
                       margin: const EdgeInsets.all(30.0),
                       alignment: Alignment.center,
                       child: Row(
@@ -1277,7 +1361,7 @@ class _LoginScreen3State extends State<LoginScreen3>
     );
   }
 
-  gotoEmailRegisterWith() {
+  gotoEmailRegisterWith({bool showCompleteData}) {
     _controller.animateToPage(
       3,
       duration: Duration(milliseconds: 500),

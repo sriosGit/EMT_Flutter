@@ -1,6 +1,7 @@
 import 'package:EMT/components/infoCard.dart';
 import 'package:EMT/models/User.dart';
-import 'package:EMT/screens/homeScreens/data.dart';
+import 'package:EMT/services/homeService.dart';
+import 'package:EMT/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -9,32 +10,115 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  /*
-  void _showDialog(BuildContext context, {String title, String msg}) {
-    final dialog = AlertDialog(
-      title: Text(title),
-      content: Text(msg),
-      actions: <Widget>[
-        RaisedButton(
-          color: Colors.teal,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text(
-            'Close',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        )
-      ],
-    );
-    showDialog(context: context, builder: (x) => dialog);
+  Future<dynamic> _fetchProfile;
+  @override
+  void initState() {
+    super.initState();
+    SessionDBUtil.db.getAllSessions().then((session) => {
+          setState(() => {
+                _fetchProfile = fetchProfile(
+                    session.first.idEstudiante, session.first.token),
+              })
+        });
   }
-  */
 
-  static User user = User.fromJson(ConstantData.currentUser);
-  static String name = user.firstName + ' ' + user.lastName;
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Center(
+          child: renderProfile(),
+        ),
+      ),
+    );
+  }
+
+  Widget renderProfile() {
+    return FutureBuilder(
+      future: _fetchProfile, // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        List<Widget> children = [];
+        if (snapshot.hasData) {
+          User user = User.fromJson(snapshot.data);
+          children = <Widget>[
+            Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 30),
+                    child: CircleAvatar(
+                      radius: 65,
+                      backgroundImage:
+                          AssetImage("assets/images/profile-pic.JPG"),
+                    ),
+                  ),
+                  Text(
+                    user.firstName + " " + user.lastName,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  InfoCard(
+                    text: user.celularEstudiante.toString(),
+                    icon: Icons.phone,
+                  ),
+                  InfoCard(
+                    text: user.email,
+                    icon: Icons.email,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
+            ),
+          ];
+        } else if (snapshot.hasError) {
+          children = <Widget>[
+            Icon(
+              Icons.error_outline,
+              color: Colors.red,
+              size: 60,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Text('Error, Intentelo nuevamente'),
+            )
+          ];
+        } else {
+          children = <Widget>[
+            Container(
+              padding: EdgeInsets.only(top: 60),
+              child: SizedBox(
+                child: CircularProgressIndicator(),
+                width: 60,
+                height: 60,
+              ),
+            ),
+          ];
+        }
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: children,
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+/*
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,21 +143,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             InfoCard(
               text: user.schoolName,
               icon: Icons.school,
-              /*
-              onPressed: () async {
-                String removeSpaceFromPhoneNumber =
-                    phone.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
-               final phoneCall = 'tel:$removeSpaceFromPhoneNumber';
-                
-                if (await launcher.canLaunch(phoneCall)) {
-                  await launcher.launch(phoneCall);
-                } else {
-                  _showDialog(
-                    context,
-                    title: 'Sorry',
-                    msg: 'please try again ',
-                  );
-                }*/
             ),
             InfoCard(
               text: 'Sección ' + user.section,
@@ -86,20 +155,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             InfoCard(
               text: user.email,
               icon: Icons.email,
-              /*
-              onPressed: () async {
-                final emailAddress = 'mailto:$email';
-                if (await launcher.canLaunch(emailAddress)) {
-                  await launcher.launch(emailAddress);
-                } else {
-                  _showDialog(
-                    context,
-                    title: 'Sorry',
-                    msg: 'please try again ',
-                  );
-                }
-              },
-              */
             ),
             SizedBox(
               height: 20,
@@ -108,5 +163,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
-  }
-}
+    */

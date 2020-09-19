@@ -9,16 +9,39 @@ part 'User.g.dart';
 /// JSON serialization logic to be generated.
 @JsonSerializable()
 class User {
+  @JsonKey(name: "nombreEstudiante")
   final String firstName;
+
+  @JsonKey(name: "apellidos")
   final String lastName;
-  final String schoolName;
+  final String colegio;
   final String section;
   final String tutor;
+
+  @JsonKey(name: "correoEstudiante")
   final String email;
   final String picture;
 
-  User(this.firstName, this.lastName, this.schoolName, this.section, this.tutor,
-      this.email, this.picture);
+  final int dniEstudiante;
+  final int celularEstudiante;
+
+  final String nombrePadre;
+  final String apellidoPadre;
+  final int celularPadre;
+
+  User(
+      this.firstName,
+      this.lastName,
+      this.colegio,
+      this.section,
+      this.tutor,
+      this.email,
+      this.picture,
+      this.dniEstudiante,
+      this.celularEstudiante,
+      this.nombrePadre,
+      this.apellidoPadre,
+      this.celularPadre);
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$ActivityFromJson()` constructor.

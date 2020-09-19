@@ -51,3 +51,13 @@ Future<dynamic> fetchEvaluations(
   HttpUtil client = new HttpUtil();
   return client.getRawRequest(url);
 }
+
+Future<dynamic> fetchProfile(
+  int userId,
+  String token,
+) async {
+  var url =
+      profileUrl + '?idEstudiante=' + userId.toString() + '&token=' + token;
+  HttpUtil client = new HttpUtil();
+  return client.getRawRequest(url);
+}

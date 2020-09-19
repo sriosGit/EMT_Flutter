@@ -18,9 +18,9 @@ class _EvaluationsScreenState extends State<EvaluationsScreen> {
     SessionDBUtil.db.getAllSessions().then((session) => {
           setState(() => {
                 _pendingEvaluations = fetchEvaluations(
-                    session.first.userId, session.first.token, 1),
+                    session.first.idEstudiante, session.first.token, 1),
                 _completedEvaluations = fetchEvaluations(
-                    session.first.userId, session.first.token, 2),
+                    session.first.idEstudiante, session.first.token, 2),
               })
         });
   }

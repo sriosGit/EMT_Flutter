@@ -11,6 +11,7 @@ Alternative _$AlternativeFromJson(Map<String, dynamic> json) {
     json['nombreAlternativa'] as String,
     json['ordenAlternativa'] as int,
     json['idPAlternativa'] as int,
+    json['puntaje'] as int,
   );
 }
 
@@ -19,4 +20,5 @@ Map<String, dynamic> _$AlternativeToJson(Alternative instance) =>
       'nombreAlternativa': instance.description,
       'ordenAlternativa': instance.value,
       'idPAlternativa': instance.idPAlternativa,
+      'puntaje': instance.puntaje,
     };

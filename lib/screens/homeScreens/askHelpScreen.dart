@@ -18,7 +18,7 @@ class _AskHelpScreenState extends State<AskHelpScreen> {
     SessionDBUtil.db.getAllSessions().then((session) => {
           setState(() {
             print(session);
-            userId = session.first.userId;
+            userId = session.first.idEstudiante;
             token = session[0].token;
           })
         });

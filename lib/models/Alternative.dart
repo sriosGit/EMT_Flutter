@@ -16,8 +16,9 @@ class Alternative {
   final int value;
 
   final int idPAlternativa;
+  final int puntaje;
 
-  Alternative(this.description, this.value, this.idPAlternativa);
+  Alternative(this.description, this.value, this.idPAlternativa, this.puntaje);
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$AlternativeFromJson()` constructor.

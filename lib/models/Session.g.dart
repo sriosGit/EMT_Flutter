@@ -8,12 +8,12 @@ part of 'Session.dart';
 
 Session _$SessionFromJson(Map<String, dynamic> json) {
   return Session(
-    json['userId'] as int,
+    json['idEstudiante'] as int,
     json['token'] as String,
   );
 }
 
 Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
-      'userId': instance.userId,
+      'idEstudiante': instance.idEstudiante,
       'token': instance.token,
     };

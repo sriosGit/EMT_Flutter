@@ -23,16 +23,17 @@ class SessionDBUtil {
     return await openDatabase(path, version: 2,
         onCreate: (Database db, int version) async {
       await db.execute(
-          "CREATE TABLE sessions(id INTEGER PRIMARY KEY AUTOINCREMENT, userId INTEGER, token TEXT )");
+          "CREATE TABLE sessions(id INTEGER PRIMARY KEY AUTOINCREMENT, idEstudiante INTEGER, token TEXT, idFacebook TEXT, tokenFacebook TEXT  )");
     });
   }
 
   addSessionToDatabase(session) async {
     final db = await database;
-    print(session.toString());
     Map<String, dynamic> row = {
-      "userId": session["idEstudiante"],
-      "token": session["token"]
+      "idEstudiante": session["idEstudiante"],
+      "token": session["token"],
+      "idFacebook": session["idFacebook"],
+      "tokenFacebook": session["tokenFacebook"],
     };
     var raw = await db.insert(
       "sessions",
@@ -45,14 +46,14 @@ class SessionDBUtil {
   updateSession(Session session) async {
     final db = await database;
     var response = await db.update("sessions", session.toJson(),
-        where: "userId = ?", whereArgs: [session.userId]);
+        where: "idEstudiante = ?", whereArgs: [session.idEstudiante]);
     return response;
   }
 
-  Future<Session> getSessionWithUserId(int userId) async {
+  Future<Session> getSessionWithidEstudiante(int idEstudiante) async {
     final db = await database;
-    var response =
-        await db.query("sessions", where: "userId = ?", whereArgs: [userId]);
+    var response = await db.query("sessions",
+        where: "idEstudiante = ?", whereArgs: [idEstudiante]);
     return response.isNotEmpty ? Session.fromJson(response.first) : null;
   }
 
@@ -65,7 +66,8 @@ class SessionDBUtil {
 
   deleteSessionWithId(int userId) async {
     final db = await database;
-    return db.delete("sessions", where: "userId = ?", whereArgs: [userId]);
+    return db
+        .delete("sessions", where: "idEstudiante = ?", whereArgs: [userId]);
   }
 
   deleteAllSession() async {

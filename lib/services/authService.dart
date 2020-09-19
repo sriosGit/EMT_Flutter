@@ -1,5 +1,8 @@
 import 'package:EMT/config/apiUrls.dart';
+import 'package:EMT/screens/homeScreen.dart';
 import 'package:EMT/utils/httpUtil.dart';
+import 'package:EMT/utils/sessionDBUtil.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -22,6 +25,8 @@ void createUser(
     String rePassword,
     int dni,
     String role,
+    String fbToken,
+    String fbUserId,
     Function success,
     Function error) async {
   var params = {
@@ -35,16 +40,17 @@ void createUser(
     "numeroCelular": phoneNumber,
     "dni": dni,
     "roleusuario": role,
+    "tokenFacebook": fbToken,
+    "idFacebook": fbUserId,
   };
   print(params);
   HttpUtil client = new HttpUtil();
   client.putRequest(registerUrl, params, success, error);
 }
 
-Future<Null> facebookLogin() async {
+Future<Null> facebookLogin(onSuccess, onError, context) async {
   FacebookLogin facebookSignIn = new FacebookLogin();
-  final FacebookLoginResult result =
-      await facebookSignIn.logInWithReadPermissions(['email']);
+  final FacebookLoginResult result = await facebookSignIn.logIn(['email']);
 
   switch (result.status) {
     case FacebookLoginStatus.loggedIn:
@@ -58,6 +64,35 @@ Future<Null> facebookLogin() async {
          Permissions: ${accessToken.permissions}
          Declined permissions: ${accessToken.declinedPermissions}
          ''');
+      HttpUtil client = new HttpUtil();
+      client
+          .getRawRequest(fbCheckUrl + '?idFacebook=${accessToken.userId}')
+          .then((res) => {
+                if (res["fbId"] == "true")
+                  {
+                    SessionDBUtil.db.addSessionToDatabase({
+                      "idEstudiante": res["idEstudiante"],
+                      "token": res["token"],
+                      "idFacebook": accessToken.userId,
+                      "tokenFacebook": accessToken.token,
+                    }).then((session) => {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      HomeScreen()))
+                        }),
+                  }
+                else
+                  {
+                    client
+                        .getRawRequest(
+                            'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${accessToken.token}')
+                        .then((graphResponse) =>
+                            {onSuccess(accessToken, graphResponse)})
+                  }
+              });
+
       break;
     case FacebookLoginStatus.cancelledByUser:
       print('Login cancelled by the user.');
@@ -65,6 +100,11 @@ Future<Null> facebookLogin() async {
     case FacebookLoginStatus.error:
       print('Something went wrong with the login process.\n'
           'Here\'s the error Facebook gave us: ${result.errorMessage}');
+      /*
+      if (onError) {
+        onError();
+      }
+      */
       break;
   }
 }

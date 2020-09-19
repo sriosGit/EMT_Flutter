@@ -1,5 +1,7 @@
-String base = "https://sistemadepresivoapi.azurewebsites.net/api/";
+String base = "https://sistemadepresivotesisupc.azurewebsites.net/api/";
 String loginUrl = base + "login/";
+String fbCheckUrl = base + "login/busqueda/idFacebook";
+String profileUrl = loginUrl + "consulta/datosPersonales";
 String registerUrl = loginUrl + "create";
 String requestHelpUrl = base + "SolictarAyuda/Solicitar";
 String activitiesUrl = base + "MisActividades/MiActividad";

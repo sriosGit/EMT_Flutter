@@ -9,10 +9,10 @@ part "Session.g.dart";
 /// JSON serialization logic to be generated.
 @JsonSerializable(explicitToJson: true)
 class Session {
-  final int userId;
+  final int idEstudiante;
   final String token;
 
-  Session(this.userId, this.token);
+  Session(this.idEstudiante, this.token);
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$SessionFromJson()` constructor.

@@ -8,14 +8,14 @@ class EvaluationPageView extends StatefulWidget {
   final int evaluationId;
   final int evaluationObjId;
   final int userId;
-  List<dynamic> answers;
+  final List answers = [];
 
-  EvaluationPageView(
-      {Key key,
-      @required this.evaluationId,
-      @required this.evaluationObjId,
-      @required this.userId})
-      : super(key: key);
+  EvaluationPageView({
+    Key key,
+    @required this.evaluationId,
+    @required this.evaluationObjId,
+    @required this.userId,
+  }) : super(key: key);
   @override
   _EvaluationPageViewState createState() => _EvaluationPageViewState();
 }
@@ -23,8 +23,10 @@ class EvaluationPageView extends StatefulWidget {
 class _EvaluationPageViewState extends State<EvaluationPageView>
     with TickerProviderStateMixin {
   Future<dynamic> _questions;
-  int _selected;
-
+  int idPAlternativa = 0;
+  int nombreAlternativa = 0;
+  int puntaje = 0;
+  int idpregunta = 0;
   @override
   void initState() {
     super.initState();
@@ -38,30 +40,18 @@ class _EvaluationPageViewState extends State<EvaluationPageView>
         });
   }
 
-/*
-  gotoLogin() {
-    _controller.animateToPage(
-      0,
-      duration: Duration(milliseconds: 500),
-      curve: Curves.easeIn,
-    );
-  }
-
-  _completeLogin() {
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
-  }
-*/
-  void saveAnswer(idRespuesta, idPAlternativa, idEvaluacion,
-      idResultadoEvaluacion, puntaje) {
-    var answer = {
-      "IdPAlternativa": idPAlternativa,
-      "IdEvaluacion": idEvaluacion,
-      "IdResultadoEvaluacion": idResultadoEvaluacion,
-      "puntaje": puntaje,
-    };
-    widget.answers.add(answer);
-    print(widget.answers);
+  void saveAnswer() {
+    if (idPAlternativa != 0) {
+      widget.answers.add({
+        "IdPAlternativa": idPAlternativa,
+        "nombreAlternativa": nombreAlternativa,
+        "puntaje": puntaje,
+        "idpregunta": idpregunta,
+        "idEvaluacion": widget.evaluationId,
+      });
+      _controller.nextPage(
+          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+    }
   }
 
   Widget renderStartBtn() {
@@ -76,7 +66,10 @@ class _EvaluationPageViewState extends State<EvaluationPageView>
         "Empezar",
         style: TextStyle(color: Colors.white, fontSize: 18),
       ),
-      onPressed: () => {},
+      onPressed: () => {
+        _controller.nextPage(
+            duration: Duration(milliseconds: 300), curve: Curves.easeIn),
+      },
     );
   }
 
@@ -92,7 +85,33 @@ class _EvaluationPageViewState extends State<EvaluationPageView>
         question.btnText,
         style: TextStyle(color: Colors.white, fontSize: 18),
       ),
-      onPressed: () => {},
+      onPressed: saveAnswer,
+    );
+  }
+
+  void onSuccessSend(res) {
+    print(res);
+    Navigator.pop(context);
+  }
+
+  void onErrorSend(res) {
+    print(res);
+  }
+
+  Widget renderSendAnswersBtn() {
+    return FlatButton(
+      shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: Colors.white,
+          ),
+          borderRadius: BorderRadius.circular(30.0)),
+      color: Colors.blue,
+      child: Text(
+        "Enviar respuestas",
+        style: TextStyle(color: Colors.white, fontSize: 18),
+      ),
+      onPressed: () =>
+          {sendAnswers(widget.answers, onSuccessSend, onErrorSend)},
     );
   }
 
@@ -104,10 +123,12 @@ class _EvaluationPageViewState extends State<EvaluationPageView>
               (alternative) => RadioListTile<int>(
                 title: Text(alternative.description),
                 value: alternative.idPAlternativa,
-                groupValue: _selected,
+                groupValue: idPAlternativa,
                 onChanged: (value) {
                   setState(() {
-                    _selected = value;
+                    idPAlternativa = value;
+                    puntaje = alternative.puntaje;
+                    idpregunta = question.id;
                   });
                 },
               ),
@@ -136,12 +157,6 @@ class _EvaluationPageViewState extends State<EvaluationPageView>
                 borderRadius: BorderRadius.circular(8),
               ),
               padding: EdgeInsets.all(10),
-              /*
-              child: Text(
-                question.body,
-                style: TextStyle(fontSize: 16),
-              ),
-              */
             ),
             SizedBox(
               height: 30,
@@ -156,10 +171,9 @@ class _EvaluationPageViewState extends State<EvaluationPageView>
   }
 
   Widget radioQuestion(question) {
-    String selectedOption = "";
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30.0),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 60.0),
         child: Column(
           children: [
             Container(
@@ -171,11 +185,6 @@ class _EvaluationPageViewState extends State<EvaluationPageView>
             SizedBox(
               height: 30,
             ),
-            /*
-            Container(
-              child: Text(question.body),
-            ),
-            */
             SizedBox(
               height: 20,
             ),
@@ -238,7 +247,7 @@ class _EvaluationPageViewState extends State<EvaluationPageView>
   Widget renderWelcome(body) {
     return Scaffold(
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 30.0),
+        padding: EdgeInsets.only(left: 30.0, right: 30.0, top: 50.0),
         child: Column(
           children: [
             Container(
@@ -262,10 +271,40 @@ class _EvaluationPageViewState extends State<EvaluationPageView>
               ),
             ),
             SizedBox(
-              height: 30,
+              height: 10,
             ),
             Container(
               child: renderStartBtn(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget renderThankYou() {
+    return Scaffold(
+      body: Container(
+        padding: EdgeInsets.only(left: 30.0, right: 30.0, top: 50.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              child: Text(
+                "¡Muchas gracias por participar!",
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Container(
+              child: renderSendAnswersBtn(),
             ),
           ],
         ),
@@ -301,6 +340,7 @@ class _EvaluationPageViewState extends State<EvaluationPageView>
             var question = Question.fromJson(snapshot.data["item2"][i]);
             questions.add(renderQuestion(question));
           }
+          questions.add(renderThankYou());
           children = questions;
         } else if (snapshot.hasError) {
           children = <Widget>[
@@ -345,7 +385,6 @@ class _EvaluationPageViewState extends State<EvaluationPageView>
         }
         return Container(
             color: Colors.white,
-            padding: EdgeInsets.symmetric(vertical: 60.0),
             child: PageView(
               controller: _controller,
               children: children,

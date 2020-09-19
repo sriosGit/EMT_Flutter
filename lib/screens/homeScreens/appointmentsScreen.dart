@@ -20,7 +20,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     SessionDBUtil.db.getAllSessions().then((session) => {
           setState(() => {
                 _pendingAppointments = fetchAppointments(
-                    session.first.userId, session.first.token),
+                    session.first.idEstudiante, session.first.token),
               })
         });
   }

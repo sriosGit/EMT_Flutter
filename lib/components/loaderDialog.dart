@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class InfoCard extends StatelessWidget {
   final String text;
   final IconData icon;
-  final Function onPressed;
+  Function onPressed;
 
   InfoCard({@required this.text, @required this.icon, this.onPressed});
   @override

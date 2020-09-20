@@ -8,6 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
+  final int goto;
+
+  const HomeScreen({Key key, this.goto = -1}) : super(key: key);
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -31,6 +35,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    if (widget.goto >= 0) {
+      setState(() => {_currentIndex = widget.goto});
+    }
   }
 
   void onTabTapped(int index) {

@@ -1,3 +1,4 @@
+import 'package:EMT/components/editProfileForm.dart';
 import 'package:EMT/components/infoCard.dart';
 import 'package:EMT/models/User.dart';
 import 'package:EMT/services/homeService.dart';
@@ -24,7 +25,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -54,12 +54,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           AssetImage("assets/images/profile-pic.JPG"),
                     ),
                   ),
-                  Text(
-                    user.firstName + " " + user.lastName,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      FlatButton(
+                          child: Text(
+                            "Editar",
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          onPressed: () => {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          EditProfileForm(
+                                        user: user,
+                                        onSuccess: onSuccessEdit,
+                                        onError: onErrorEdit,
+                                      ),
+                                    ))
+                              })
+                    ],
+                  ),
+                  InfoCard(
+                    text: user.firstName,
+                    icon: Icons.account_circle,
+                  ),
+                  InfoCard(
+                    text: user.lastName,
+                    icon: Icons.account_circle,
                   ),
                   InfoCard(
                     text: user.celularEstudiante.toString(),
@@ -68,6 +95,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   InfoCard(
                     text: user.email,
                     icon: Icons.email,
+                  ),
+                  InfoCard(
+                    text: user.colegio,
+                    icon: Icons.school,
                   ),
                   SizedBox(
                     height: 20,
@@ -115,6 +146,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  onSuccessEdit() {
+    print("todo oki");
+  }
+
+  onErrorEdit() {
+    print("todo no oki");
   }
 }
 

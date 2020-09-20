@@ -3,6 +3,7 @@ String loginUrl = base + "login/";
 String fbCheckUrl = base + "login/busqueda/idFacebook";
 String profileUrl = loginUrl + "consulta/datosPersonales";
 String registerUrl = loginUrl + "create";
+String editUrl = loginUrl + "ActualizarDatos";
 String requestHelpUrl = base + "SolictarAyuda/Solicitar";
 String activitiesUrl = base + "MisActividades/MiActividad";
 String appointmentsUrl = base + "MisCita/citas/controller";

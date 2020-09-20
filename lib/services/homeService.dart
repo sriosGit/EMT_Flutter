@@ -61,3 +61,31 @@ Future<dynamic> fetchProfile(
   HttpUtil client = new HttpUtil();
   return client.getRawRequest(url);
 }
+
+void editUser(
+    String estudianteId,
+    String token,
+    String firstName,
+    String lastName,
+    int phoneNumber,
+    String email,
+    int dni,
+    String colegio,
+    Function success,
+    Function error) async {
+  var params = {
+    "id": estudianteId,
+    "token": token,
+    "correo": email,
+    "nombreEstudiante": firstName,
+    "apellidos": lastName,
+    "celularEstudiante": phoneNumber,
+    "dniEstudiante": dni,
+    "colegio": colegio,
+  };
+
+  print(params);
+  HttpUtil client = new HttpUtil();
+  var url = editUrl + "?id=$estudianteId&token=$token";
+  client.postRequest(url, params, success, error);
+}

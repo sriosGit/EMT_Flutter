@@ -33,6 +33,7 @@ class _LoginScreen3State extends State<LoginScreen3>
   final signUpPasswordController = TextEditingController();
   final rePasswordController = TextEditingController();
   final dniController = TextEditingController();
+  final colegioController = TextEditingController();
 
   //facebook vars
   String fbToken = "";
@@ -55,6 +56,7 @@ class _LoginScreen3State extends State<LoginScreen3>
     signUpPasswordController.dispose();
     rePasswordController.dispose();
     dniController.dispose();
+    colegioController.dispose();
     super.dispose();
   }
 
@@ -661,7 +663,8 @@ class _LoginScreen3State extends State<LoginScreen3>
                                     children: <Widget>[
                                       Expanded(
                                         child: FlatButton(
-                                          onPressed: () => {},
+                                          onPressed: () => facebookLogin(
+                                              onSuccessFb, onErrorFb, context),
                                           padding: EdgeInsets.only(
                                             top: 20.0,
                                             bottom: 20.0,
@@ -1264,6 +1267,23 @@ class _LoginScreen3State extends State<LoginScreen3>
                         ],
                       ),
                     ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: Text(
+                              "COLEGIO",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     Container(
                       width: MediaQuery.of(context).size.width,
                       margin: const EdgeInsets.only(
@@ -1284,7 +1304,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         children: <Widget>[
                           Expanded(
                             child: TextField(
-                              controller: dniController,
+                              controller: colegioController,
                               textAlign: TextAlign.left,
                               decoration: InputDecoration(
                                 border: InputBorder.none,

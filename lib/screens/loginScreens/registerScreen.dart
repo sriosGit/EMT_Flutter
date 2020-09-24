@@ -4,6 +4,7 @@ import 'package:EMT/screens/homeScreen.dart';
 import 'package:EMT/services/authService.dart';
 import 'package:EMT/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SignUpForm extends StatefulWidget {
   final Function goToLogin;

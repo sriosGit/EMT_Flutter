@@ -9,6 +9,7 @@ class EvaluationCard extends StatelessWidget {
   EvaluationCard(this.evaluation);
 
   _onTapCard(BuildContext context) async {
+    print(evaluation.status);
     if (evaluation.status == "PENDIENTE") {
       Navigator.push(
         context,

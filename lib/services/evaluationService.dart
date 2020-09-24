@@ -6,6 +6,9 @@ Future<dynamic> fetchQuestions(
   int idEvaluacion,
   int idObjetoEvaluacion,
 ) async {
+  print(userId);
+  print(idEvaluacion);
+  print(idObjetoEvaluacion);
   var url = questionsUrl +
       '?idEstudiante=' +
       userId.toString() +

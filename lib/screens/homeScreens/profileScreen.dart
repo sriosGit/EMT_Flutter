@@ -1,6 +1,7 @@
 import 'package:EMT/components/editProfileForm.dart';
 import 'package:EMT/components/infoCard.dart';
 import 'package:EMT/models/User.dart';
+import 'package:EMT/screens/loginScreen.dart';
 import 'package:EMT/services/homeService.dart';
 import 'package:EMT/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  void deleteSession() {
+    SessionDBUtil.db.deleteAllSession().then(
+          (deleted) => {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => LoginScreen3())),
+          },
+        );
   }
 
   Widget renderProfile() {
@@ -96,9 +108,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: user.email,
                     icon: Icons.email,
                   ),
+                  /*
                   InfoCard(
                     text: user.colegio,
                     icon: Icons.school,
+                  ),
+                  */
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FlatButton(
+                          child: Text(
+                            "Cerrar sesión",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          onPressed: () => deleteSession()),
+                    ],
                   ),
                   SizedBox(
                     height: 20,

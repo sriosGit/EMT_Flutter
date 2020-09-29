@@ -69,7 +69,9 @@ class _LoginScreen3State extends State<LoginScreen3>
   // TODO: ordenar esta gracia
   Future<bool> onSuccessLogin(res) async {
     setState(() => {loading = false});
-    Navigator.of(context).pop();
+    if (loading) {
+      Navigator.of(context).pop();
+    }
     if (res != "Correo u contraseña inválida...") {
       print("Succesful Login ");
       SessionDBUtil.db.deleteAllSession().then((deleted) => {
@@ -159,15 +161,25 @@ class _LoginScreen3State extends State<LoginScreen3>
   //FACEBOOK LOGIN
 
   dynamic onSuccessFb(accessToken, graphResponse) {
+    _showLoaderDialog();
     firstName1Controller.text = graphResponse["first_name"];
     lastName1Controller.text = graphResponse["last_name"];
     emailController.text = graphResponse["email"];
+
     setState(() {
       showCompleteData = true;
+      loading = true;
       fbToken = accessToken.token;
       fbUserId = accessToken.userId;
     });
     gotoEmailRegisterWith();
+
+    if (loading) {
+      Navigator.of(context).pop();
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   dynamic onErrorFb() {

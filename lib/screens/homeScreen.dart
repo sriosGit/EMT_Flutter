@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:EMT/screens/homeScreens/activitiesScreen.dart';
 import 'package:EMT/screens/homeScreens/profileScreen.dart';
 import 'package:EMT/screens/notificationsScreen.dart';
 import 'package:EMT/screens/homeScreens/appointmentsScreen.dart';
 import 'package:EMT/screens/homeScreens/askHelpScreen.dart';
 import 'package:EMT/screens/homeScreens/evaluationsScreen.dart';
+import 'package:EMT/utils/sessionDBUtil.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -18,6 +23,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int _currentIndex = 0;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+
   final List<Widget> _children = [
     AskHelpScreen(),
     EvaluationsScreen(),
@@ -38,6 +46,37 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     if (widget.goto >= 0) {
       setState(() => {_currentIndex = widget.goto});
     }
+    firebaseCloudMessagingListeners();
+  }
+
+  void firebaseCloudMessagingListeners() {
+    String uid;
+    _firebaseMessaging.getToken().then((fcmToken) {
+      SessionDBUtil.db.getAllSessions().then((session) {
+        uid = session.first.idEstudiante.toString();
+        if (fcmToken != null) {
+          var userRecord = _db.collection('users').doc(uid);
+          userRecord.set({
+            'userId': uid,
+            'deviceToken': fcmToken,
+            'createdAt': FieldValue.serverTimestamp(), // optional
+            'platform': Platform.operatingSystem // optional
+          });
+        }
+      });
+    });
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('on message $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('on resume $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('on launch $message');
+      },
+    );
   }
 
   void onTabTapped(int index) {
@@ -76,22 +115,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           items: [
             BottomNavigationBarItem(
               icon: FaIcon(FontAwesomeIcons.commentAlt),
-              title: new Text('Ayuda'),
+              label: 'Ayuda',
             ),
             BottomNavigationBarItem(
               icon: FaIcon(FontAwesomeIcons.clipboardCheck),
-              title: new Text('Evaluacion'),
+              label: 'Evaluacion',
             ),
             BottomNavigationBarItem(
-                icon: FaIcon(FontAwesomeIcons.calendarAlt),
-                title: Text('Citas')),
+              icon: FaIcon(FontAwesomeIcons.calendarAlt),
+              label: 'Citas',
+            ),
             BottomNavigationBarItem(
               icon: FaIcon(FontAwesomeIcons.heartbeat),
-              title: new Text('Actividades'),
+              label: 'Actividades',
             ),
             BottomNavigationBarItem(
               icon: FaIcon(FontAwesomeIcons.userAlt),
-              title: new Text('Perfil'),
+              label: 'Perfil',
             ),
           ],
         ),

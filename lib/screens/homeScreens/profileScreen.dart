@@ -85,8 +85,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       builder: (BuildContext context) =>
                                           EditProfileForm(
                                         user: user,
-                                        onSuccess: onSuccessEdit,
-                                        onError: onErrorEdit,
                                       ),
                                     ))
                               })
@@ -178,14 +176,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
-  }
-
-  onSuccessEdit() {
-    print("todo oki");
-  }
-
-  onErrorEdit() {
-    print("todo no oki");
   }
 }
 

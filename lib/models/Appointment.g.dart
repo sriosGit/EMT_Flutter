@@ -15,6 +15,7 @@ Appointment _$AppointmentFromJson(Map<String, dynamic> json) {
     json['fechaInicio'] as String ?? '13/09/2020',
     json['fechaFin'] as String ?? '13/09/2020',
     json['area'] as String,
+    json['descripcion'] as String,
     json['primerNOmbre'] as String,
     json['primerApellido'] as String,
   );
@@ -26,6 +27,7 @@ Map<String, dynamic> _$AppointmentToJson(Appointment instance) =>
       'estadoCita': instance.estadoCita,
       'nombre': instance.nombre,
       'description': instance.description,
+      'descripcion': instance.descripcion,
       'fechaInicio': instance.fechaInicio,
       'fechaFin': instance.fechaFin,
       'area': instance.area,

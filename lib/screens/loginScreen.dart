@@ -40,6 +40,8 @@ class _LoginScreen3State extends State<LoginScreen3>
   String fbUserId = "";
   bool showCompleteData = false;
   bool loading = false;
+  String selectedSpecialistId = "0";
+  String selectedSpecialistName = "";
 
   @override
   void dispose() {
@@ -138,24 +140,32 @@ class _LoginScreen3State extends State<LoginScreen3>
 
   void _onClickRegister() {
     print("ON CLICK SIGNUP");
-    _showLoaderDialog();
     setState(() => {loading = true});
-    createUser(
-      firstName1Controller.text,
-      firstName2Controller.text,
-      lastName1Controller.text,
-      lastName2Controller.text,
-      int.parse(phoneNumberController.text),
-      emailController.text,
-      signUpPasswordController.text,
-      rePasswordController.text,
-      int.parse(dniController.text),
-      "Estudiante",
-      fbToken,
-      fbUserId,
-      onSuccessSignup,
-      onErrorSignup,
-    );
+    if (selectedSpecialistId != "0") {
+      _showLoaderDialog();
+      createUser(
+        firstName1Controller.text,
+        firstName2Controller.text,
+        lastName1Controller.text,
+        lastName2Controller.text,
+        int.parse(phoneNumberController.text),
+        emailController.text,
+        signUpPasswordController.text,
+        rePasswordController.text,
+        int.parse(dniController.text),
+        "Estudiante",
+        selectedSpecialistId,
+        fbToken,
+        fbUserId,
+        onSuccessSignup,
+        onErrorSignup,
+      );
+    } else {
+      _scaffoldSignUpKey.currentState.showSnackBar(SnackBar(
+        content: new Text('Por favor, selecciona a un especialista'),
+        duration: new Duration(seconds: 10),
+      ));
+    }
   }
 
   //FACEBOOK LOGIN
@@ -204,118 +214,142 @@ class _LoginScreen3State extends State<LoginScreen3>
   Widget homePage() {
     return Scaffold(
         body: Container(
-      height: MediaQuery.of(context).size.height,
       color: Colors.blue,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(top: 150.0),
-            child: Center(
-              child: Icon(
-                Icons.favorite,
-                color: Colors.white,
-                size: 40.0,
+          Column(
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 30.0),
+                child: Center(
+                  child: Icon(
+                    Icons.favorite,
+                    color: Colors.white,
+                    size: 40.0,
+                  ),
+                ),
               ),
-            ),
+              Container(
+                padding: EdgeInsets.only(top: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "¡Bienvenidos a ",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                    Text(
+                      "MET",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
           Container(
-            padding: EdgeInsets.only(top: 20.0),
-            child: Row(
+            width: 300,
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "¡Bienvenidos a ",
+                  "MET es una herramienta realizada con la finalidad de ayudarte en tu salud mental",
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 20.0,
+                    fontSize: 18.0,
                   ),
-                ),
-                Text(
-                  "MET",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),
           ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 150.0),
-            alignment: Alignment.center,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: FlatButton(
-                    shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: Colors.white,
+          Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(left: 30.0, right: 30.0),
+                alignment: Alignment.center,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                              color: Colors.white,
+                            ),
+                            borderRadius: BorderRadius.circular(30.0)),
+                        color: Colors.blue,
+                        onPressed: () => gotoSignup(),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 20.0,
+                            horizontal: 20.0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                child: Text(
+                                  "REGÍSTRATE",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(30.0)),
-                    color: Colors.blue,
-                    onPressed: () => gotoSignup(),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20.0,
-                        horizontal: 20.0,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              "REGÍSTRATE",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 30.0),
-            alignment: Alignment.center,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: FlatButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0)),
-                    color: Colors.white,
-                    onPressed: () => gotoLogin(),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20.0,
-                        horizontal: 20.0,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              "INICAR SESIÓN",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold),
-                            ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin:
+                    const EdgeInsets.only(left: 30.0, right: 30.0, top: 30.0),
+                alignment: Alignment.center,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0)),
+                        color: Colors.white,
+                        onPressed: () => gotoLogin(),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 20.0,
+                            horizontal: 20.0,
                           ),
-                        ],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                child: Text(
+                                  "INICAR SESIÓN",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
@@ -383,6 +417,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                       ),
                     ),
                   ),
+                  /*
                   Container(
                     width: 300,
                     padding: const EdgeInsets.only(
@@ -410,6 +445,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                       ),
                     ),
                   ),
+                  */
                   Container(
                     width: 300,
                     padding: const EdgeInsets.only(
@@ -560,6 +596,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                   ],
                 ),
               ),
+              /*
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -580,6 +617,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                   ),
                 ],
               ),
+              */
               Container(
                 width: MediaQuery.of(context).size.width,
                 margin:
@@ -683,11 +721,12 @@ class _LoginScreen3State extends State<LoginScreen3>
                                           ),
                                           child: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
+                                                MainAxisAlignment.center,
                                             children: <Widget>[
                                               FaIcon(FontAwesomeIcons.facebookF,
                                                   color: Colors.white,
                                                   size: 20.0),
+                                              SizedBox(width: 10),
                                               Text(
                                                 "FACEBOOK",
                                                 textAlign: TextAlign.center,
@@ -709,6 +748,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                         ),
                       ),
                     ),
+                    /*
                     Expanded(
                       child: Container(
                         margin: EdgeInsets.only(left: 8.0),
@@ -761,7 +801,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                           ],
                         ),
                       ),
-                    ),
+                    ),*/
                   ],
                 ),
               )
@@ -794,586 +834,674 @@ class _LoginScreen3State extends State<LoginScreen3>
           )
         : Container();
     return Scaffold(
-        key: _scaffoldSignUpKey,
-        body: Container(
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-              color: Colors.white,
-            ),
-            child: LayoutBuilder(builder:
-                (BuildContext context, BoxConstraints viewportConstraints) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.all(100.0),
-                      child: Center(
-                        child: Icon(
-                          Icons.favorite,
-                          color: Colors.blue,
-                          size: 50.0,
-                        ),
+      key: _scaffoldSignUpKey,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          color: Colors.white,
+        ),
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+            return SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.all(100.0),
+                    child: Center(
+                      child: Icon(
+                        Icons.favorite,
+                        color: Colors.blue,
+                        size: 50.0,
                       ),
                     ),
-                    completeDataMessage,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                  ),
+                  completeDataMessage,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20.0),
+                        child: FlatButton(
+                          onPressed: () => gotoLogin(),
+                          child: Text(
+                            "¿Ya tienes una cuenta?",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              fontSize: 15.0,
+                            ),
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            "EMAIL",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(
+                        left: 40.0, right: 40.0, bottom: 30.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: Colors.blue,
+                            width: 1,
+                            style: BorderStyle.solid),
+                      ),
+                    ),
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 20.0),
+                        Expanded(
+                          child: TextField(
+                            controller: emailController,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'tucorreo@mail.com',
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            "CONTRASEÑA",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(
+                        left: 40.0, right: 40.0, bottom: 30.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: Colors.blue,
+                            width: 1,
+                            style: BorderStyle.solid),
+                      ),
+                    ),
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: signUpPasswordController,
+                            obscureText: true,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: '*********',
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            "CONFIRMAR CONTRASEÑA",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(
+                        left: 40.0, right: 40.0, bottom: 30.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: Colors.blue,
+                            width: 1,
+                            style: BorderStyle.solid),
+                      ),
+                    ),
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: rePasswordController,
+                            obscureText: true,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: '*********',
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            "PRIMER NOMBRE",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(
+                        left: 40.0, right: 40.0, bottom: 30.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: Colors.blue,
+                            width: 1,
+                            style: BorderStyle.solid),
+                      ),
+                    ),
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: firstName1Controller,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Ingresa tu primer nombre',
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            "SEGUNDO NOMBRE (OPCIONAL)",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(
+                        left: 40.0, right: 40.0, bottom: 30.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: Colors.blue,
+                            width: 1,
+                            style: BorderStyle.solid),
+                      ),
+                    ),
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: firstName2Controller,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Ingresa tu segundo nombre',
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            "PRIMER APELLIDO",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(
+                        left: 40.0, right: 40.0, bottom: 30.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: Colors.blue,
+                            width: 1,
+                            style: BorderStyle.solid),
+                      ),
+                    ),
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: lastName1Controller,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Ingresa tu primer apellido',
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            "SEGUNDO APELLIDO",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(
+                        left: 40.0, right: 40.0, bottom: 30.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: Colors.blue,
+                            width: 1,
+                            style: BorderStyle.solid),
+                      ),
+                    ),
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: lastName2Controller,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Ingresa tu segundo apellido',
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            "TELEFONO",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(
+                        left: 40.0, right: 40.0, bottom: 30.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: Colors.blue,
+                            width: 1,
+                            style: BorderStyle.solid),
+                      ),
+                    ),
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: phoneNumberController,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Ingresa tu numero de telefono',
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            "DNI",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(
+                        left: 40.0, right: 40.0, bottom: 30.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: Colors.blue,
+                            width: 1,
+                            style: BorderStyle.solid),
+                      ),
+                    ),
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: dniController,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Ingresa tu DNI',
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            "COLEGIO",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(
+                        left: 40.0, right: 40.0, bottom: 30.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: Colors.blue,
+                            width: 1,
+                            style: BorderStyle.solid),
+                      ),
+                    ),
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: colegioController,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Ingresa tu Colegio',
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            "ESPECIALISTA",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(
+                        left: 40.0, right: 40.0, bottom: 30.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            color: Colors.blue,
+                            width: 1,
+                            style: BorderStyle.solid),
+                      ),
+                    ),
+                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: InputDecorator(
+                            decoration: InputDecoration(
+                              errorStyle: TextStyle(
+                                  color: Colors.redAccent, fontSize: 16.0),
+                              hintText: 'Selecciona a tu especialista',
+                            ),
+                            isEmpty: selectedSpecialistId == "",
+                            child: DropdownButtonHideUnderline(
+                              child: new FutureBuilder<dynamic>(
+                                future: getSpecialists(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    return new Container();
+                                  } else if (snapshot.hasData) {
+                                    List specialists = [
+                                      {
+                                        'idEspecialista': '0',
+                                        'nombre': 'Escoge a tu especialista'
+                                      }
+                                    ];
+                                    specialists.addAll(snapshot.data.toList());
+                                    return DropdownButton<String>(
+                                        isDense: true,
+                                        value: selectedSpecialistId,
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            selectedSpecialistId = newValue;
+                                          });
+                                        },
+                                        items: specialists
+                                            .map<DropdownMenuItem<String>>(
+                                                (spec) {
+                                          return DropdownMenuItem<String>(
+                                            value: spec["idEspecialista"]
+                                                .toString(),
+                                            child: Text(spec["nombre"]),
+                                          );
+                                        }).toList());
+                                  } else {
+                                    return CircularProgressIndicator();
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.all(30.0),
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
                           child: FlatButton(
-                            onPressed: () => gotoLogin(),
-                            child: Text(
-                              "¿Ya tienes una cuenta?",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                fontSize: 15.0,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                color: Colors
+                                    .blue, //Color of the borderwidth of the border
                               ),
-                              textAlign: TextAlign.end,
+                              borderRadius: BorderRadius.circular(30.0),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 40.0),
-                            child: Text(
-                              "EMAIL",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                fontSize: 15.0,
+                            color: Colors.blue,
+                            onPressed: _onClickRegister,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 20.0,
+                                horizontal: 20.0,
                               ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(
-                          left: 40.0, right: 40.0, bottom: 30.0),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              color: Colors.blue,
-                              width: 1,
-                              style: BorderStyle.solid),
-                        ),
-                      ),
-                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: emailController,
-                              textAlign: TextAlign.left,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'tucorreo@mail.com',
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 40.0),
-                            child: Text(
-                              "CONTRASEÑA",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                fontSize: 15.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(
-                          left: 40.0, right: 40.0, bottom: 30.0),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              color: Colors.blue,
-                              width: 1,
-                              style: BorderStyle.solid),
-                        ),
-                      ),
-                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: signUpPasswordController,
-                              obscureText: true,
-                              textAlign: TextAlign.left,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: '*********',
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 40.0),
-                            child: Text(
-                              "CONFIRMAR CONTRASEÑA",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                fontSize: 15.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(
-                          left: 40.0, right: 40.0, bottom: 30.0),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              color: Colors.blue,
-                              width: 1,
-                              style: BorderStyle.solid),
-                        ),
-                      ),
-                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: rePasswordController,
-                              obscureText: true,
-                              textAlign: TextAlign.left,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: '*********',
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 40.0),
-                            child: Text(
-                              "PRIMER NOMBRE",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                fontSize: 15.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(
-                          left: 40.0, right: 40.0, bottom: 30.0),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              color: Colors.blue,
-                              width: 1,
-                              style: BorderStyle.solid),
-                        ),
-                      ),
-                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: firstName1Controller,
-                              textAlign: TextAlign.left,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Ingresa tu primer nombre',
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 40.0),
-                            child: Text(
-                              "SEGUNDO NOMBRE (OPCIONAL)",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                fontSize: 15.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(
-                          left: 40.0, right: 40.0, bottom: 30.0),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              color: Colors.blue,
-                              width: 1,
-                              style: BorderStyle.solid),
-                        ),
-                      ),
-                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: firstName2Controller,
-                              textAlign: TextAlign.left,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Ingresa tu segundo nombre',
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 40.0),
-                            child: Text(
-                              "PRIMER APELLIDO",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                fontSize: 15.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(
-                          left: 40.0, right: 40.0, bottom: 30.0),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              color: Colors.blue,
-                              width: 1,
-                              style: BorderStyle.solid),
-                        ),
-                      ),
-                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: lastName1Controller,
-                              textAlign: TextAlign.left,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Ingresa tu primer apellido',
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 40.0),
-                            child: Text(
-                              "SEGUNDO APELLIDO",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                fontSize: 15.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(
-                          left: 40.0, right: 40.0, bottom: 30.0),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              color: Colors.blue,
-                              width: 1,
-                              style: BorderStyle.solid),
-                        ),
-                      ),
-                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: lastName2Controller,
-                              textAlign: TextAlign.left,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Ingresa tu segundo apellido',
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 40.0),
-                            child: Text(
-                              "TELEFONO",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                fontSize: 15.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(
-                          left: 40.0, right: 40.0, bottom: 30.0),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              color: Colors.blue,
-                              width: 1,
-                              style: BorderStyle.solid),
-                        ),
-                      ),
-                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: phoneNumberController,
-                              textAlign: TextAlign.left,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Ingresa tu numero de telefono',
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 40.0),
-                            child: Text(
-                              "DNI",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                fontSize: 15.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(
-                          left: 40.0, right: 40.0, bottom: 30.0),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              color: Colors.blue,
-                              width: 1,
-                              style: BorderStyle.solid),
-                        ),
-                      ),
-                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: dniController,
-                              textAlign: TextAlign.left,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Ingresa tu DNI',
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 40.0),
-                            child: Text(
-                              "COLEGIO",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                fontSize: 15.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(
-                          left: 40.0, right: 40.0, bottom: 30.0),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              color: Colors.blue,
-                              width: 1,
-                              style: BorderStyle.solid),
-                        ),
-                      ),
-                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: colegioController,
-                              textAlign: TextAlign.left,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Ingresa tu Colegio',
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.all(30.0),
-                      alignment: Alignment.center,
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: FlatButton(
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                  color: Colors
-                                      .blue, //Color of the borderwidth of the border
-                                ),
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              color: Colors.blue,
-                              onPressed: _onClickRegister,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 20.0,
-                                  horizontal: 20.0,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        "REGÍSTRATE",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      "REGÍSTRATE",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              );
-            })));
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   // page view navigation controllers

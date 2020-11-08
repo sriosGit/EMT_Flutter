@@ -9,6 +9,14 @@ void requestHelp(int userId, String token, String message, Function success,
   client.postRequest(requestHelpUrl, params, success, error);
 }
 
+void addJournalEntry(
+    String userId, String texto, Function success, Function error) async {
+  var params = {"idEstduiante": userId, "texto": texto};
+  print(params);
+  HttpUtil client = new HttpUtil();
+  client.postRequest(addJournalEntryUrl, params, success, error);
+}
+
 Future<dynamic> fetchActivities(
   int userId,
   String token,
@@ -25,12 +33,27 @@ Future<dynamic> fetchActivities(
   return client.getRawRequest(url);
 }
 
-Future<dynamic> fetchAppointments(
+Future<dynamic> fetchJournalEntries(
   int userId,
   String token,
 ) async {
-  var url =
-      appointmentsUrl + '?idAuUser=' + userId.toString() + '&token=' + token;
+  var url = getJournalEntriesUrl + '?idEstudiante=' + userId.toString();
+  HttpUtil client = new HttpUtil();
+  return client.getRawRequest(url);
+}
+
+Future<dynamic> fetchAppointments(
+  int userId,
+  String token,
+  int idEstado,
+) async {
+  var url = appointmentsUrl +
+      '?idAuUser=' +
+      userId.toString() +
+      '&token=' +
+      token +
+      '&idEstado=' +
+      idEstado.toString();
   HttpUtil client = new HttpUtil();
   return client.getRawRequest(url);
 }
@@ -66,7 +89,8 @@ void editUser(
     String estudianteId,
     String token,
     String firstName,
-    String lastName,
+    String fatherName,
+    String motherName,
     int phoneNumber,
     String email,
     int dni,
@@ -78,7 +102,8 @@ void editUser(
     "token": token,
     "correo": email,
     "nombreEstudiante": firstName,
-    "apellidos": lastName,
+    "estApellidoPaterno": fatherName,
+    "estApellidoMaterno": motherName,
     "celularEstudiante": phoneNumber,
     "dniEstudiante": dni,
     "colegio": colegio,

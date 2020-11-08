@@ -10,3 +10,6 @@ String appointmentsUrl = base + "MisCita/citas/controller";
 String evaluationsUrl = base + "MisEvaluaciones/moListarEvaluacion";
 String questionsUrl = base + "MisEvaluaciones/ListadoPreguntas";
 String sendAnswersUrl = base + "MisEvaluaciones/guardar/respuesta";
+String getSpecialistsUrl = base + "wListadoEspecialista/consulta/especialistas";
+String getJournalEntriesUrl = base + "biUsuarios/listado/diario";
+String addJournalEntryUrl = base + "biUsuarios/analizar/diario";

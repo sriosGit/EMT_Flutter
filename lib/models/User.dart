@@ -26,7 +26,12 @@ class User {
   final int celularEstudiante;
 
   final String nombrePadre;
+
+  @JsonKey(name: "estApellidoPaterno")
   final String apellidoPadre;
+
+  @JsonKey(name: "estApellidoMaterno")
+  final String apellidoMadre;
   final int celularPadre;
 
   User(
@@ -41,6 +46,7 @@ class User {
       this.celularEstudiante,
       this.nombrePadre,
       this.apellidoPadre,
+      this.apellidoMadre,
       this.celularPadre);
 
   /// A necessary factory constructor for creating a new User instance

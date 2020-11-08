@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "79358121308-p4hc0bl3nbf68r5tqc2ddu9am5quqmqs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.upc.emt",
+            "certificate_hash": "9444901c291d9db3711bd6c600e82e29ec2227f1"
+          }
+        },
+        {
           "client_id": "79358121308-t0iqst22515jd69bquodrv6ddc3g098j.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -58,10 +58,6 @@ class EvaluationCard extends StatelessWidget {
                                   'Asignado: ' + evaluation.date,
                                   style: TextStyle(fontSize: 12),
                                 ),
-                                Text(
-                                  'Tutor: ' + evaluation.tutorName,
-                                  style: TextStyle(fontSize: 12),
-                                ),
                               ]),
                         ]),
                   ),

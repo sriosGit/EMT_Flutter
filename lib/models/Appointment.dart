@@ -15,7 +15,7 @@ class Appointment {
   final String nombre;
 
   final String description;
-
+  final String descripcion; // god forgive me
   @JsonKey(defaultValue: "13/09/2020")
   final String fechaInicio;
   @JsonKey(defaultValue: "13/09/2020")
@@ -31,6 +31,7 @@ class Appointment {
       this.fechaInicio,
       this.fechaFin,
       this.area,
+      this.descripcion,
       this.primerNOmbre,
       this.primerApellido);
 

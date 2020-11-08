@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class AppointmentCard extends StatelessWidget {
   final Appointment appointment;
-
-  AppointmentCard(this.appointment);
+  final onClickDetails;
+  AppointmentCard(this.appointment, this.onClickDetails);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class AppointmentCard extends StatelessWidget {
                   'Ver más',
                   style: TextStyle(color: Colors.white),
                 ),
-                onPressed: () => {},
+                onPressed: () => onClickDetails(appointment),
               ),
             ]),
       ),

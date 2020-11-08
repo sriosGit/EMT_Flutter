@@ -60,10 +60,10 @@ class _EvaluationsScreenState extends State<EvaluationsScreen> {
     );
   }
 
-  Widget renderNoResults(String message) {
+  Widget renderNoResults() {
     return (Container(
       padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
-      child: Text(message),
+      child: Text("No se encontraron evaluaciones"),
     ));
   }
 
@@ -74,8 +74,9 @@ class _EvaluationsScreenState extends State<EvaluationsScreen> {
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         List<Widget> children = [];
         if (snapshot.hasData) {
-          if (snapshot.data is String) {
-            children.add(renderNoResults(snapshot.data));
+          print('wtf:' + snapshot.data.toString());
+          if (snapshot.data.length <= 0) {
+            children.add(renderNoResults());
           } else {
             List<Widget> evaluations = new List<Widget>();
             for (var i = 0; i < snapshot.data.length; i++) {
@@ -109,11 +110,13 @@ class _EvaluationsScreenState extends State<EvaluationsScreen> {
             ),
           ];
         }
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: children,
+        return SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: children,
+            ),
           ),
         );
       },
@@ -128,7 +131,7 @@ class _EvaluationsScreenState extends State<EvaluationsScreen> {
         List<Widget> children = [];
         if (snapshot.hasData) {
           if (snapshot.data is String) {
-            children.add(renderNoResults(snapshot.data));
+            children.add(renderNoResults());
           } else {
             List<Widget> evaluations = new List<Widget>();
             for (var i = 0; i < snapshot.data.length; i++) {
@@ -161,11 +164,13 @@ class _EvaluationsScreenState extends State<EvaluationsScreen> {
             )
           ];
         }
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: children,
+        return SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: children,
+            ),
           ),
         );
       },

@@ -7,13 +7,9 @@ import 'package:EMT/utils/sessionDBUtil.dart';
 import 'package:flutter/material.dart';
 
 class EditProfileForm extends StatefulWidget {
-  final Function onSuccess;
-  final Function onError;
   final User user;
 
-  const EditProfileForm(
-      {Key key, this.user, this.onSuccess, this.onError, String token})
-      : super(key: key);
+  const EditProfileForm({Key key, this.user, String token}) : super(key: key);
 
   @override
   _SignUpFormState createState() => _SignUpFormState();
@@ -24,7 +20,8 @@ class _SignUpFormState extends State<EditProfileForm> {
       new GlobalKey<ScaffoldState>();
 
   final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
+  final fatherNameController = TextEditingController();
+  final motherNameController = TextEditingController();
   final phoneNumberController = TextEditingController();
   final emailController = TextEditingController();
   final dniController = TextEditingController();
@@ -38,8 +35,10 @@ class _SignUpFormState extends State<EditProfileForm> {
   @override
   void initState() {
     super.initState();
+    print(widget.user);
     firstNameController.text = widget.user.firstName;
-    lastNameController.text = widget.user.lastName;
+    fatherNameController.text = widget.user.apellidoPadre;
+    motherNameController.text = widget.user.apellidoMadre;
     phoneNumberController.text = widget.user.celularEstudiante.toString();
     emailController.text = widget.user.email;
     dniController.text = widget.user.dniEstudiante.toString();
@@ -58,7 +57,8 @@ class _SignUpFormState extends State<EditProfileForm> {
       idEstudiante,
       token,
       firstNameController.text,
-      lastNameController.text,
+      fatherNameController.text,
+      motherNameController.text,
       int.parse(phoneNumberController.text),
       emailController.text,
       int.parse(dniController.text),
@@ -254,7 +254,7 @@ class _SignUpFormState extends State<EditProfileForm> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 40.0),
                             child: Text(
-                              "APELLIDOS",
+                              "APELLIDO PATERNO",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue,
@@ -285,7 +285,56 @@ class _SignUpFormState extends State<EditProfileForm> {
                         children: <Widget>[
                           Expanded(
                             child: TextField(
-                              controller: lastNameController,
+                              controller: fatherNameController,
+                              textAlign: TextAlign.left,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Ingresa tu apellido paterno',
+                                hintStyle: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 40.0),
+                            child: Text(
+                              "APELLIDO MATERNO",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, bottom: 30.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.blue,
+                              width: 1,
+                              style: BorderStyle.solid),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            child: TextField(
+                              controller: motherNameController,
                               textAlign: TextAlign.left,
                               decoration: InputDecoration(
                                 border: InputBorder.none,

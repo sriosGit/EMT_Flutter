@@ -14,6 +14,11 @@ void login(
   client.postRequest(loginUrl, params, success, error);
 }
 
+Future getSpecialists() {
+  HttpUtil client = new HttpUtil();
+  return client.getRawRequest(getSpecialistsUrl);
+}
+
 void createUser(
     String firstName1,
     String firstName2,
@@ -25,6 +30,7 @@ void createUser(
     String rePassword,
     int dni,
     String role,
+    String selectedSpecialistId,
     String fbToken,
     String fbUserId,
     Function success,
@@ -39,6 +45,7 @@ void createUser(
     "segundoApellido": lastName2,
     "numeroCelular": phoneNumber,
     "dni": dni,
+    "idEspecialisa": selectedSpecialistId,
     "roleusuario": role,
     "tokenFacebook": fbToken,
     "idFacebook": fbUserId,
